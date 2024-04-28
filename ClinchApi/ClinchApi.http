@@ -1,0 +1,6 @@
+@ClinchApi_HostAddress = http://localhost:5234
+
+GET {{ClinchApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
