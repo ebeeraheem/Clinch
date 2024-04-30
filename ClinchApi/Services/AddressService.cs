@@ -89,6 +89,11 @@ public class AddressService
             throw new ArgumentException("State is required", nameof(address.State));
         }
 
+        if (string.IsNullOrWhiteSpace(address.Country))
+        {
+            throw new ArgumentException("Country is required", nameof(address.State));
+        }
+
         return address;
     }
 }
