@@ -28,7 +28,7 @@ public class ProductService
     //Create a product
     public async Task<Product> Create(Product product)
     {
-        var validProduct = ValidateProduct(product);
+        var validProduct = ValidateProduct(product, _context);
 
         _context.Products.Add(validProduct);
         await _context.SaveChangesAsync();
@@ -44,7 +44,7 @@ public class ProductService
             throw new ArgumentException("Invalid ID or product");
         }
 
-        var validProduct = ValidateProduct(newProduct);
+        var validProduct = ValidateProduct(newProduct, _context);
 
         var productToUpdate = await _context.Products.FindAsync(id);
         if (productToUpdate is null)
@@ -73,9 +73,8 @@ public class ProductService
 
     /* *************************************** */
 
-    public static Product ValidateProduct(Product product)
+    public static Product ValidateProduct(Product product, EcommerceDbContext context)
     {
-        var context = new EcommerceDbContext();
         if (product is null)
         {
             throw new ArgumentNullException(nameof(product));
