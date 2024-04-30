@@ -77,7 +77,7 @@ public class ProductService
     {
         if (product is null)
         {
-            throw new ArgumentNullException(nameof(product));
+            throw new ArgumentNullException(nameof(product), "Product cannot be null");
         }
 
         if (string.IsNullOrWhiteSpace(product.Name))
