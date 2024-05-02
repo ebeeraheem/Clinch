@@ -55,7 +55,7 @@ public class CategoriesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Category>> CreateCategoryAsync(CategoryDTO newCategoryDTO)
+    public async Task<ActionResult<Category>> Post([FromBody] CategoryDTO newCategoryDTO)
     {
         try
         {
@@ -88,7 +88,7 @@ public class CategoriesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateCategoryAsync(int id, Category newCategory)
+    public async Task<IActionResult> Put(int id, [FromBody] Category newCategory)
     {
         try
         {
@@ -130,7 +130,8 @@ public class CategoriesController : ControllerBase
         }
         catch (Exception)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
+            return StatusCode(StatusCodes.Status500InternalServerError, 
+                "An unexpected error occurred");
         }
     }
 }
