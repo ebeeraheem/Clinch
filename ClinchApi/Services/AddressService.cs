@@ -1,5 +1,8 @@
 ﻿using ClinchApi.Data;
+using ClinchApi.Extensions;
 using ClinchApi.Models;
+using ClinchApi.Models.DTOs;
+using ClinchApi.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClinchApi.Services;
@@ -21,11 +24,12 @@ public class AddressService
     }
 
     //Add an address
-    public async Task<Address> Create(Address address)
+    public async Task<Address> Create(AddressDTO addressDTO)
     {
-        var validAddress = ValidateAddress(address);
+        var validAddressDTO = AddressValidator.ValidateAddress(addressDTO);
+        var address = validAddressDTO.ConvertToAddress();
 
-        _context.Addresses.Add(validAddress);
+        _context.Addresses.Add(address);
         await _context.SaveChangesAsync();
 
         return address;
@@ -39,7 +43,7 @@ public class AddressService
             throw new ArgumentException("Invalid ID or address");
         }
 
-        var validAddress = ValidateAddress(address);
+        var validAddress = AddressValidator.ValidateAddress(address);
 
         var addressToUpdate = await _context.Addresses.FindAsync(id);
         if (addressToUpdate is null)
@@ -65,35 +69,38 @@ public class AddressService
         await _context.SaveChangesAsync();
     }
 
+    
+
     /* *************************************** */
 
-    public static Address ValidateAddress(Address address)
-    {
-        if (address is null)
-        {
-            throw new ArgumentNullException(nameof(address), "Address cannot be null");
-        }
+    //public static AddressDTO ValidateAddress(AddressDTO addressDTO)
+    //{
+    //    if (addressDTO is null)
+    //    {
+    //        throw new ArgumentNullException(nameof(addressDTO), "Address cannot be null");
+    //    }
 
-        if (string.IsNullOrWhiteSpace(address.StreetAddress))
-        {
-            throw new ArgumentException("Street address is required", nameof(address.StreetAddress));
-        }
+    //    if (string.IsNullOrWhiteSpace(addressDTO.StreetAddress))
+    //    {
+    //        throw new ArgumentException("Street address is required", nameof(addressDTO.StreetAddress));
+    //    }
 
-        if (string.IsNullOrWhiteSpace(address.City))
-        {
-            throw new ArgumentException("City is required", nameof(address.City));
-        }
+    //    if (string.IsNullOrWhiteSpace(addressDTO.City))
+    //    {
+    //        throw new ArgumentException("City is required", nameof(addressDTO.City));
+    //    }
 
-        if (string.IsNullOrWhiteSpace(address.State))
-        {
-            throw new ArgumentException("State is required", nameof(address.State));
-        }
+    //    if (string.IsNullOrWhiteSpace(addressDTO.State))
+    //    {
+    //        throw new ArgumentException("State is required", nameof(addressDTO.State));
+    //    }
 
-        if (string.IsNullOrWhiteSpace(address.Country))
-        {
-            throw new ArgumentException("Country is required", nameof(address.State));
-        }
+    //    if (string.IsNullOrWhiteSpace(addressDTO.Country))
+    //    {
+    //        throw new ArgumentException("Country is required", nameof(addressDTO.State));
+    //    }
 
-        return address;
-    }
+    //    return addressDTO;
+    //}
+
 }
