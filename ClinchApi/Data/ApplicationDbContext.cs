@@ -3,13 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClinchApi.Data;
 
-public class EcommerceDbContext : DbContext
+public class ApplicationDbContext : DbContext
 {
-    public EcommerceDbContext()
-    {
-    }
-
-    public EcommerceDbContext(DbContextOptions<EcommerceDbContext> options) : base(options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : 
+        base(options)
     {        
     }
 

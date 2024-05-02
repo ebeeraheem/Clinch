@@ -6,9 +6,9 @@ namespace ClinchApi.Services;
 
 public class AddressService
 {
-    private readonly EcommerceDbContext _context;
+    private readonly ApplicationDbContext _context;
 
-    public AddressService(EcommerceDbContext context)
+    public AddressService(ApplicationDbContext context)
     {
         _context = context;
     }

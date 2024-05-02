@@ -1,14 +1,17 @@
 ﻿using ClinchApi.Data;
 using ClinchApi.Models;
+using ClinchApi.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ClinchApi.Services;
 
 public class CategoryService
 {
-    private readonly EcommerceDbContext _context;
+    private readonly ApplicationDbContext _context;
 
-    public CategoryService(EcommerceDbContext context)
+    public CategoryService(ApplicationDbContext context)
     {
         _context = context;
     }
@@ -27,32 +30,47 @@ public class CategoryService
     }
 
     //Create a new category
-    public async Task<Category> Create(Category newCategory)
+    public async Task<Category> Create(CategoryDTO newCategoryDTO)
     {
-        var validCategory = await ValidateCategory(newCategory, _context);
+        var validCategory = await ValidateCategory(newCategoryDTO, _context);
 
-        await _context.Categories.AddAsync(validCategory);
+        var category = DTOToCategory(validCategory);
+        _context.Categories.Add(category);
         await _context.SaveChangesAsync();
-
-        return newCategory;
+        
+        return category;
     }
 
     //Update a category
     public async Task Update(int id, Category newCategory)
     {
+        //Find a way to check whether the category to update
+        //is the same as the provided id
         if (newCategory is null || newCategory.Id != id)
         {
             throw new ArgumentException("Invalid ID or category");
         }
-        var validCategory = ValidateCategory(newCategory, _context, true, id);
+        if (string.IsNullOrWhiteSpace(newCategory.Name))
+        {
+            throw new ArgumentException("Name cannot be null or empty", nameof(newCategory.Name));
+        }
+        if (await _context.Categories.AnyAsync(
+            c => c.Name.ToLower() == newCategory.Name.ToLower() &&  
+            c.Id != id))
+        {
+            throw new ArgumentException("Category with the same name already exists");
+        }
+        //var validCategoryDTO = await ValidateCategory(newCategory, _context, true, id);
+        //var category = DTOToCategory(validCategoryDTO);
 
         var categoryToUpdate = await _context.Categories.FindAsync(id);
         if (categoryToUpdate is null)
         {
-            throw new InvalidOperationException("Category not found");
+            throw new InvalidOperationException($"Category with ID {id} not found");
         }
 
-        _context.Entry(categoryToUpdate).CurrentValues.SetValues(validCategory);
+        //_context.Entry(categoryToUpdate).CurrentValues.SetValues(category);
+        categoryToUpdate.Name = newCategory.Name;
         await _context.SaveChangesAsync();
     }
 
@@ -62,7 +80,7 @@ public class CategoryService
         var categoryToDelete = await _context.Categories.FindAsync(id);
         if (categoryToDelete is null)
         {
-            throw new InvalidOperationException("Category not found");
+            throw new InvalidOperationException($"Category with ID {id} not found");
         }
 
         _context.Categories.Remove(categoryToDelete);
@@ -71,23 +89,38 @@ public class CategoryService
 
     /* *************************************** */
 
-    public static async Task<Category> ValidateCategory(Category category, EcommerceDbContext context, bool isUpdate = false, int id = 0)
+    public static async Task<CategoryDTO> ValidateCategory(
+        CategoryDTO categoryDTO, 
+        ApplicationDbContext context, 
+        bool isUpdate = false, 
+        int id = 0)
     {
-        if (category is null)
+        if (categoryDTO is null)
         {
-            throw new ArgumentNullException(nameof(category));
+            throw new ArgumentNullException(nameof(categoryDTO));
         }
 
-        if (string.IsNullOrWhiteSpace(category.Name))
+        if (string.IsNullOrWhiteSpace(categoryDTO.Name))
         {
-            throw new ArgumentException("Name cannot be null or empty", nameof(category.Name));
+            throw new ArgumentException("Name cannot be null or empty", nameof(categoryDTO.Name));
         }
 
-        if (await context.Categories.AnyAsync(c => c.Name == category.Name && (isUpdate ? c.Id != id : true)))
+        if (await context.Categories.AnyAsync(
+            c => c.Name.ToLower() == categoryDTO.Name.ToLower() && 
+            (isUpdate ? c.Id != id : true)))
         {
-            throw new InvalidOperationException("Category with the same name already exists");
+            throw new ArgumentException("Category with the same name already exists");
         }
 
+        return categoryDTO;
+    }
+    public static Category DTOToCategory(CategoryDTO categoryDTO)
+    {
+        var category = new Category()
+        {
+            Id = 0,
+            Name = categoryDTO.Name
+        };
         return category;
     }
 }

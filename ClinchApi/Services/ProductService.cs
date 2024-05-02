@@ -6,9 +6,9 @@ namespace ClinchApi.Services;
 
 public class ProductService
 {
-    private readonly EcommerceDbContext _context;
+    private readonly ApplicationDbContext _context;
 
-    public ProductService(EcommerceDbContext context)
+    public ProductService(ApplicationDbContext context)
     {
         _context = context;
     }
@@ -73,7 +73,7 @@ public class ProductService
 
     /* *************************************** */
 
-    public static async Task<Product> ValidateProduct(Product product, EcommerceDbContext context, bool isUpdate = false, int id = 0)
+    public static async Task<Product> ValidateProduct(Product product, ApplicationDbContext context, bool isUpdate = false, int id = 0)
     {
         if (product is null)
         {
