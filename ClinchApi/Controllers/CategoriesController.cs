@@ -67,15 +67,7 @@ public class CategoriesController : ControllerBase
             var uri = Url.Action(nameof(GetByIdAsync), new { id = created.Id });
             return Created(uri, created);
         }
-        catch (ArgumentNullException ex)
-        {
-            return BadRequest(ex.Message);
-        }
         catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (InvalidOperationException ex)
         {
             return BadRequest(ex.Message);
         }

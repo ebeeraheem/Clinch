@@ -32,12 +32,21 @@ public class CategoryService
     //Create a new category
     public async Task<Category> Create(CategoryDTO newCategoryDTO)
     {
-        var validCategory = await ValidateCategory(newCategoryDTO, _context);
+        if (string.IsNullOrWhiteSpace(newCategoryDTO.Name))
+        {
+            throw new ArgumentException("Name cannot be null or empty", nameof(newCategoryDTO.Name));
+        }
 
-        var category = DTOToCategory(validCategory);
+        if (await _context.Categories.AnyAsync(
+            c => c.Name.ToLower() == newCategoryDTO.Name.ToLower()))
+        {
+            throw new ArgumentException("Category with the same name already exists");
+        }
+
+        var category = new Category() { Name = newCategoryDTO.Name };
         _context.Categories.Add(category);
         await _context.SaveChangesAsync();
-        
+
         return category;
     }
 
@@ -48,15 +57,16 @@ public class CategoryService
         {
             throw new ArgumentException("Invalid ID or category");
         }
+
         if (string.IsNullOrWhiteSpace(newCategory.Name))
         {
             throw new ArgumentException("Name cannot be null or empty", nameof(newCategory.Name));
         }
         if (await _context.Categories.AnyAsync(
-            c => c.Name.ToLower() == newCategory.Name.ToLower() &&  
+            c => c.Name.ToLower() == newCategory.Name.ToLower() &&
             c.Id != id))
         {
-            throw new ArgumentException("Category with the same name already exists");
+            throw new InvalidOperationException("Category with the same name already exists");
         }
 
         var categoryToUpdate = await _context.Categories.FindAsync(id);
@@ -80,37 +90,5 @@ public class CategoryService
 
         _context.Categories.Remove(categoryToDelete);
         await _context.SaveChangesAsync();
-    }
-
-    /* *************************************** */
-
-    public static async Task<CategoryDTO> ValidateCategory(CategoryDTO categoryDTO, ApplicationDbContext context)
-    {
-        if (categoryDTO is null)
-        {
-            throw new ArgumentNullException(nameof(categoryDTO));
-        }
-
-        if (string.IsNullOrWhiteSpace(categoryDTO.Name))
-        {
-            throw new ArgumentException("Name cannot be null or empty", nameof(categoryDTO.Name));
-        }
-
-        if (await context.Categories.AnyAsync(
-            c => c.Name.ToLower() == categoryDTO.Name.ToLower()))
-        {
-            throw new ArgumentException("Category with the same name already exists");
-        }
-
-        return categoryDTO;
-    }
-    public static Category DTOToCategory(CategoryDTO categoryDTO)
-    {
-        var category = new Category()
-        {
-            Id = 0,
-            Name = categoryDTO.Name
-        };
-        return category;
     }
 }
