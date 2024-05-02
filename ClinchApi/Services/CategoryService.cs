@@ -44,8 +44,6 @@ public class CategoryService
     //Update a category
     public async Task Update(int id, Category newCategory)
     {
-        //Find a way to check whether the category to update
-        //is the same as the provided id
         if (newCategory is null || newCategory.Id != id)
         {
             throw new ArgumentException("Invalid ID or category");
@@ -60,8 +58,6 @@ public class CategoryService
         {
             throw new ArgumentException("Category with the same name already exists");
         }
-        //var validCategoryDTO = await ValidateCategory(newCategory, _context, true, id);
-        //var category = DTOToCategory(validCategoryDTO);
 
         var categoryToUpdate = await _context.Categories.FindAsync(id);
         if (categoryToUpdate is null)
@@ -69,7 +65,6 @@ public class CategoryService
             throw new InvalidOperationException($"Category with ID {id} not found");
         }
 
-        //_context.Entry(categoryToUpdate).CurrentValues.SetValues(category);
         categoryToUpdate.Name = newCategory.Name;
         await _context.SaveChangesAsync();
     }
@@ -89,11 +84,7 @@ public class CategoryService
 
     /* *************************************** */
 
-    public static async Task<CategoryDTO> ValidateCategory(
-        CategoryDTO categoryDTO, 
-        ApplicationDbContext context, 
-        bool isUpdate = false, 
-        int id = 0)
+    public static async Task<CategoryDTO> ValidateCategory(CategoryDTO categoryDTO, ApplicationDbContext context)
     {
         if (categoryDTO is null)
         {
@@ -106,8 +97,7 @@ public class CategoryService
         }
 
         if (await context.Categories.AnyAsync(
-            c => c.Name.ToLower() == categoryDTO.Name.ToLower() && 
-            (isUpdate ? c.Id != id : true)))
+            c => c.Name.ToLower() == categoryDTO.Name.ToLower()))
         {
             throw new ArgumentException("Category with the same name already exists");
         }
