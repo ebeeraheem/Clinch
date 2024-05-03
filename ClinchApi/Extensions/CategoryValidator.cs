@@ -19,7 +19,8 @@ public class CategoryValidator
         }
 
         if (await context.Categories.AnyAsync(
-            c => c.Name.ToLower() == category.Name.ToLower() && (isUpdate ? c.Id != id : true) ))
+            c => c.Name.ToLower() == category.Name.ToLower() && 
+            (isUpdate ? c.Id != id : true) ))
         {
             throw new ArgumentException("Category with the same name already exists");
         }

@@ -67,39 +67,4 @@ public class AddressService
         _context.Addresses.Remove(addressToDelete);
         await _context.SaveChangesAsync();
     }
-
-    
-
-    /* *************************************** */
-
-    //public static AddressDTO ValidateAddress(AddressDTO addressDTO)
-    //{
-    //    if (addressDTO is null)
-    //    {
-    //        throw new ArgumentNullException(nameof(addressDTO), "Address cannot be null");
-    //    }
-
-    //    if (string.IsNullOrWhiteSpace(addressDTO.StreetAddress))
-    //    {
-    //        throw new ArgumentException("Street address is required", nameof(addressDTO.StreetAddress));
-    //    }
-
-    //    if (string.IsNullOrWhiteSpace(addressDTO.City))
-    //    {
-    //        throw new ArgumentException("City is required", nameof(addressDTO.City));
-    //    }
-
-    //    if (string.IsNullOrWhiteSpace(addressDTO.State))
-    //    {
-    //        throw new ArgumentException("State is required", nameof(addressDTO.State));
-    //    }
-
-    //    if (string.IsNullOrWhiteSpace(addressDTO.Country))
-    //    {
-    //        throw new ArgumentException("Country is required", nameof(addressDTO.State));
-    //    }
-
-    //    return addressDTO;
-    //}
-
 }

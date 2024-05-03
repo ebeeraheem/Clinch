@@ -1,6 +1,7 @@
 ﻿using ClinchApi.Data;
 using ClinchApi.Extensions;
 using ClinchApi.Models;
+using ClinchApi.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClinchApi.Services;
@@ -27,12 +28,13 @@ public class ProductService
     }
 
     //Create a product
-    public async Task<Product> Create(Product product)
+    public async Task<Product> Create(ProductDTO newProductDTO)
     {
-        var validProduct = await ProductValidator
-            .ValidateProduct(product, _context);
+        var validProductDTO = await ProductValidator
+            .ValidateProduct(newProductDTO, _context);
 
-        _context.Products.Add(validProduct);
+        var product = validProductDTO.ConvertToProduct();
+        _context.Products.Add(product);
         await _context.SaveChangesAsync();
 
         return product;
@@ -52,7 +54,7 @@ public class ProductService
         var productToUpdate = await _context.Products.FindAsync(id);
         if (productToUpdate is null)
         {
-            throw new InvalidOperationException("Product not found");
+            throw new InvalidOperationException($"Product with id {id} not found");
         }
 
         _context.Entry(productToUpdate).CurrentValues.SetValues(validProduct);
@@ -67,7 +69,7 @@ public class ProductService
 
         if (productToDelete is null)
         {
-            throw new InvalidOperationException("Product not found");
+            throw new InvalidOperationException($"Product with id {id} not found");
         }
 
         _context.Products.Remove(productToDelete);

@@ -33,10 +33,10 @@ public class CategoryService
     //Create a new category
     public async Task<Category> Create(CategoryDTO newCategoryDTO)
     {
-        var validCategory = await CategoryValidator
+        var validCategoryDTO = await CategoryValidator
             .ValidateCategory(newCategoryDTO, _context);
 
-        var category = new Category() { Name = validCategory.Name };
+        var category = new Category() { Name = validCategoryDTO.Name };
         _context.Categories.Add(category);
         await _context.SaveChangesAsync();
 
@@ -64,7 +64,7 @@ public class CategoryService
         await _context.SaveChangesAsync();
     }
 
-    //Remove a category
+    //Delete a category
     public async Task Delete(int id)
     {
         var categoryToDelete = await _context.Categories.FindAsync(id);
