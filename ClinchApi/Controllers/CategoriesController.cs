@@ -59,13 +59,16 @@ public class CategoriesController : ControllerBase
     {
         try
         {
-            var created = await _categoryService.Create(newCategoryDTO);
+            var category = await _categoryService.Create(newCategoryDTO);
 
-            //return CreatedAtAction(nameof(GetByIdAsync), new { id = created.Id }, created);
+            //return CreatedAtAction(nameof(GetByIdAsync), new { id = category.Id }, category);
             //The above method returns a 500 Internal Server Error
             //even though the resource was successfully created
-            var uri = Url.Action(nameof(GetByIdAsync), new { id = created.Id });
-            return Created(uri, created);
+
+            var uri = Url.Action(nameof(GetByIdAsync), new { id = category.Id });
+            //For some reason, uri is null here. It should be api/category/<category.Id>
+
+            return Created(uri, category);
         }
         catch (ArgumentException ex)
         {
@@ -117,7 +120,7 @@ public class CategoriesController : ControllerBase
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<ActionResult> Delete(int id)
     {
         try
         {
