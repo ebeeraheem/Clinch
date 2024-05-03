@@ -1,4 +1,5 @@
 ﻿using ClinchApi.Data;
+using ClinchApi.Extensions;
 using ClinchApi.Models;
 using ClinchApi.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
@@ -32,18 +33,10 @@ public class CategoryService
     //Create a new category
     public async Task<Category> Create(CategoryDTO newCategoryDTO)
     {
-        if (string.IsNullOrWhiteSpace(newCategoryDTO.Name))
-        {
-            throw new ArgumentException("Name cannot be null or empty", nameof(newCategoryDTO.Name));
-        }
+        var validCategory = await CategoryValidator
+            .ValidateCategory(newCategoryDTO, _context);
 
-        if (await _context.Categories.AnyAsync(
-            c => c.Name.ToLower() == newCategoryDTO.Name.ToLower()))
-        {
-            throw new ArgumentException("Category with the same name already exists");
-        }
-
-        var category = new Category() { Name = newCategoryDTO.Name };
+        var category = new Category() { Name = validCategory.Name };
         _context.Categories.Add(category);
         await _context.SaveChangesAsync();
 
@@ -58,16 +51,8 @@ public class CategoryService
             throw new ArgumentException("Invalid ID or category");
         }
 
-        if (string.IsNullOrWhiteSpace(newCategory.Name))
-        {
-            throw new ArgumentException("Name cannot be null or empty", nameof(newCategory.Name));
-        }
-        if (await _context.Categories.AnyAsync(
-            c => c.Name.ToLower() == newCategory.Name.ToLower() &&
-            c.Id != id))
-        {
-            throw new InvalidOperationException("Category with the same name already exists");
-        }
+        var validCategory = await CategoryValidator
+            .ValidateCategory(newCategory, _context, true, id);
 
         var categoryToUpdate = await _context.Categories.FindAsync(id);
         if (categoryToUpdate is null)
@@ -75,7 +60,7 @@ public class CategoryService
             throw new InvalidOperationException($"Category with ID {id} not found");
         }
 
-        categoryToUpdate.Name = newCategory.Name;
+        categoryToUpdate.Name = validCategory.Name;
         await _context.SaveChangesAsync();
     }
 

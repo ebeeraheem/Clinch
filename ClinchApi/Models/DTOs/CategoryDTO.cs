@@ -1,6 +1,8 @@
-﻿namespace ClinchApi.Models.DTOs;
+﻿using ClinchApi.Models.Interfaces;
 
-public class CategoryDTO
+namespace ClinchApi.Models.DTOs;
+
+public class CategoryDTO : ICategoryBase
 {
     public string Name { get; set; }
 }
