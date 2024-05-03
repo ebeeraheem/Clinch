@@ -1,4 +1,5 @@
 ﻿using ClinchApi.Data;
+using ClinchApi.Extensions;
 using ClinchApi.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,9 +29,10 @@ public class ProductService
     //Create a product
     public async Task<Product> Create(Product product)
     {
-        var validProduct = await ValidateProduct(product, _context);
+        var validProduct = await ProductValidator
+            .ValidateProduct(product, _context);
 
-        await _context.Products.AddAsync(validProduct);
+        _context.Products.Add(validProduct);
         await _context.SaveChangesAsync();
 
         return product;
@@ -44,7 +46,8 @@ public class ProductService
             throw new ArgumentException("Invalid ID or product");
         }
 
-        var validProduct = await ValidateProduct(newProduct, _context, true, id);
+        var validProduct = await ProductValidator
+            .ValidateProduct(newProduct, _context, true, id);
 
         var productToUpdate = await _context.Products.FindAsync(id);
         if (productToUpdate is null)
@@ -69,45 +72,5 @@ public class ProductService
 
         _context.Products.Remove(productToDelete);
         await _context.SaveChangesAsync();
-    }
-
-    /* *************************************** */
-
-    public static async Task<Product> ValidateProduct(Product product, ApplicationDbContext context, bool isUpdate = false, int id = 0)
-    {
-        if (product is null)
-        {
-            throw new ArgumentNullException(nameof(product), "Product cannot be null");
-        }
-
-        if (string.IsNullOrWhiteSpace(product.Name))
-        {
-            throw new ArgumentException("Name cannot be null or empty", nameof(product.Name));
-        }
-
-        //Check whether a product with the same name exist
-        //Or a product with the same name that is not the one being updated
-        if (await context.Products.AnyAsync(p => p.Name == product.Name && (isUpdate ? p.Id != id : true)))
-        {
-            throw new InvalidOperationException("Product with the same name already exists");
-        }
-
-        if (product.Price <= 0)
-        {
-            throw new ArgumentException("Price must be greater than zero", nameof(product.Price));
-        }
-
-        if (product.Quantity <= 0)
-        {
-            throw new ArgumentException("Quantity must be greater than zero", nameof(product.Quantity));
-        }
-
-        ////Check whether the provided image Uri is valid
-        //if (!Uri.TryCreate(product.ImageUrl.ToString(), UriKind.Absolute, out Uri imageUri))
-        //{
-        //    throw new ArgumentException("Invalid image URL format", nameof(product.ImageUrl));
-        //}
-
-        return product;
     }
 }

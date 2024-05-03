@@ -1,12 +1,10 @@
 ﻿using ClinchApi.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
-namespace ClinchApi.Models;
+namespace ClinchApi.Models.DTOs;
 
-public class Product : IProductBase
+public class ProductDTO : IProductBase
 {
-    public int Id { get; set; }
-
     [Required]
     public string Name { get; set; }
     public string? Description { get; set; }
@@ -19,6 +17,4 @@ public class Product : IProductBase
 
     public List<Category>? Categories { get; set; }
     public Uri? ImageUrl { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime LastUpdatedAt { get; set; } = DateTime.UtcNow;
 }
