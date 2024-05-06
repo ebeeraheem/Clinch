@@ -6,6 +6,6 @@ public interface IProductBase
     string? Description { get; set; }
     decimal Price { get; set; }
     int Quantity { get; set; }
-    List<Category>? Categories { get; set; }
+    public List<int>? CategoryId { get; set; }
     Uri? ImageUrl { get; set; }
 }

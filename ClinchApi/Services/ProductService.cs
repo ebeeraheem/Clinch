@@ -17,13 +17,16 @@ public class ProductService
     //Get all products
     public async Task<IEnumerable<Product>> GetProducts()
     {
-        return await _context.Products.AsNoTracking().ToListAsync();
+        return await _context.Products.AsNoTracking()
+            .Include(p => p.Categories)
+            .ToListAsync();
     }
 
     //Get product by id
     public async Task<Product?> GetProductById(int id)
     {
         return await _context.Products.AsNoTracking()
+            .Include(p => p.Categories)
             .SingleOrDefaultAsync(p => p.Id  == id);
     }
 
@@ -33,7 +36,7 @@ public class ProductService
         var validProductDTO = await ProductValidator
             .ValidateProduct(newProductDTO, _context);
 
-        var product = validProductDTO.ConvertToProduct();
+        var product = await validProductDTO.ConvertToProduct(_context);
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
 

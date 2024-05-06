@@ -28,9 +28,11 @@ public static class ProductFilter
             products = products.Where(p => p.Quantity <= lowStock);
         }
 
+        //This doesn't work
         if (categoryId.HasValue)
         {
-            products = products.Where(p => p.Categories.Any(c => c.Id == categoryId));
+            products = products.Where(
+                p => p.Categories.Any(c => c.Id == categoryId));
         }
 
         if (createdAfter.HasValue)

@@ -24,10 +24,29 @@ public class ProductValidator
 
         //Check whether a product with the same name exist
         //Or a product with the same name that is not the one being updated
-        if (await context.Products.AnyAsync(p => p.Name == product.Name && (isUpdate ? p.Id != id : true)))
+        if (await context.Products.AnyAsync(
+            p => p.Name.ToLower() == product.Name.ToLower() && 
+            (isUpdate ? p.Id != id : true)))
         {
             throw new InvalidOperationException("Product with the same name already exists");
         }
+
+        if (isUpdate)
+        {
+            if (await context.Products.AnyAsync(
+            p => p.Name.ToLower() == product.Name.ToLower() &&
+            p.CategoryId == product.CategoryId))
+            {
+                throw new InvalidOperationException("Product already exists in the category");
+            }
+        }
+        else
+        {
+            if (product.CategoryId != null && product.CategoryId.Distinct().Count() != product.CategoryId.Count)
+            {
+                throw new InvalidOperationException("Product cannot have duplicate CategoryIds");
+            }
+        }        
 
         if (product.Price <= 0)
         {
@@ -39,11 +58,11 @@ public class ProductValidator
             throw new ArgumentException("Quantity must be greater than zero", nameof(product.Quantity));
         }
 
-        //Check whether the provided image Uri is valid
-        if (!Uri.TryCreate(product.ImageUrl.ToString(), UriKind.Absolute, out Uri imageUri))
-        {
-            throw new ArgumentException("Invalid image URL format", nameof(product.ImageUrl));
-        }
+        ////Check whether the provided image Uri is valid
+        //if (!Uri.TryCreate(product.ImageUrl.ToString(), UriKind.Absolute, out Uri imageUri))
+        //{
+        //    throw new ArgumentException("Invalid image URL format", nameof(product.ImageUrl));
+        //}
 
         return product;
     }
