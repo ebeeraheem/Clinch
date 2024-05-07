@@ -1,5 +1,6 @@
 ﻿using ClinchApi.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ClinchApi.Models;
 
@@ -18,7 +19,7 @@ public class Product : IProductBase
     public int Quantity { get; set; }
 
     public List<int>? CategoryId { get; set; }
-    public virtual List<Category>? Categories { get; set; }
+    public virtual List<Category>? Categories { get; set; } = new();
     public Uri? ImageUrl { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime LastUpdatedAt { get; set; } = DateTime.UtcNow;

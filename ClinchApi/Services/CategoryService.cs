@@ -20,7 +20,8 @@ public class CategoryService
     //Get all categories
     public async Task<IEnumerable<Category>> GetCategories()
     {
-        return await _context.Categories.AsNoTracking().ToListAsync();
+        return await _context.Categories.AsNoTracking()
+            .ToListAsync();
     }
 
     //Get a category by Id

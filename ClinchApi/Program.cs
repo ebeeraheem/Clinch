@@ -1,4 +1,5 @@
 using ClinchApi.Data;
+using ClinchApi.Extensions;
 using ClinchApi.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,13 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-//// For production or non-testing environment
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("EcommerceDb")));
-
-// For testing environment (using in-memory database)
+// For production or non-testing environment
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseInMemoryDatabase("EcommerceDb"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("EcommerceDb"))
+    .LogTo(Console.WriteLine, LogLevel.Information));
+
+//// For testing environment (using in-memory database)
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseInMemoryDatabase("EcommerceDb"));
 
 builder.Services.AddScoped<AddressService>();
 builder.Services.AddScoped<CategoryService>();
@@ -37,5 +39,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Seed the database before running the app
+app.CreateDb();
 
 app.Run();

@@ -69,6 +69,9 @@ public class AddressController : ControllerBase
     /// <param name="address">Information to update the address</param>
     /// <returns>No content</returns>
     [HttpPut]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Put(int id, [FromBody] Address address)
     {
         try

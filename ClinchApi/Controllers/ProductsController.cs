@@ -109,13 +109,4 @@ public class ProductsController : ControllerBase
 
     //Delete a product
 
-    //------------------------------------------//
-    //Get products where max-price <= n
-    //Get products where min-price <= n
-    //Get products where price between min - max
-    //Get products that are low on stock
-    //Get all products from a category
-    //Get products created after {date}
-    //Get products created before {date}
-
 }
