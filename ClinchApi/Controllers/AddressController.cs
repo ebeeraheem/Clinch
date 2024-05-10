@@ -30,7 +30,7 @@ public class AddressController : ControllerBase
         var address = await _addressService.GetAddressById(id);
 
         return address == null ? 
-            NotFound($"Category with ID {id} not found") : 
+            NotFound($"Address with ID {id} not found") : 
             Ok(address);
     }
 
@@ -48,6 +48,8 @@ public class AddressController : ControllerBase
         try
         {
             var address = await _addressService.Create(newAddressDTO);
+
+            Console.WriteLine("The address id is: " + address.Id);
 
             return CreatedAtAction(nameof(GetById), new { id = address.Id }, address);
         }
