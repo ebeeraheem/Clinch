@@ -48,9 +48,8 @@ public class AddressController : ControllerBase
         try
         {
             var address = await _addressService.Create(newAddressDTO);
-            var uri = Url.Action(nameof(GetById), new { id = address.Id });
 
-            return Created(uri, address);
+            return CreatedAtAction(nameof(GetById), new { id = address.Id }, address);
         }
         catch (ArgumentException ex)
         {
