@@ -137,5 +137,25 @@ public class ProductsController : ControllerBase
     }
 
     //Delete a product
-
+    [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> Delete(int id)
+    {
+        try
+        {
+            await _productService.Delete(id);
+            return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                "An unexpected error occurred");
+        }
+    }
 }
