@@ -31,21 +31,10 @@ public class ProductValidator
             throw new InvalidOperationException("Product with the same name already exists");
         }
 
-        if (isUpdate)
+        //Prevent adding duplicate category IDs
+        if (product.CategoryId != null && product.CategoryId.Distinct().Count() != product.CategoryId.Count)
         {
-            if (await context.Products.AnyAsync(
-            p => p.Name.ToLower() == product.Name.ToLower() &&
-            p.CategoryId == product.CategoryId))
-            {
-                throw new InvalidOperationException("Product already exists in the category");
-            }
-        }
-        else
-        {
-            if (product.CategoryId != null && product.CategoryId.Distinct().Count() != product.CategoryId.Count)
-            {
-                throw new InvalidOperationException("Product cannot have duplicate CategoryIds");
-            }
+            throw new InvalidOperationException("Product cannot have duplicate CategoryIds");
         }        
 
         if (product.Price <= 0)

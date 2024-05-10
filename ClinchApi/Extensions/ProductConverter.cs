@@ -1,6 +1,7 @@
 ﻿using ClinchApi.Data;
 using ClinchApi.Models;
 using ClinchApi.Models.DTOs;
+using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
 
 namespace ClinchApi.Extensions;
@@ -38,6 +39,50 @@ public static class ProductConverter
                 product.Categories.Add(category);
             }
         }
+
+        return product;
+    }
+
+    public static async Task<Product> UpdateToProduct(this ProductUpdateDTO productUpdateDTO, ApplicationDbContext context, Product productToUpdate)
+    {
+        var product = new Product()
+        {
+            Id = productUpdateDTO.Id,
+            Name = productUpdateDTO.Name,
+            Description = productUpdateDTO.Description,
+            Price = productUpdateDTO.Price,
+            Quantity = productUpdateDTO.Quantity,
+            CategoryId = productUpdateDTO.CategoryId,
+            //Categories, if any, will be added below,
+            ImageUrl = productUpdateDTO.ImageUrl,
+            CreatedAt = productToUpdate.CreatedAt, //This remains the same
+            LastUpdatedAt = DateTime.UtcNow
+        };
+
+        var categoriesToRemove = productToUpdate.Categories
+            .Select(c => c.Id).Except(product.CategoryId).ToList();
+        var categoriesToAdd = product.CategoryId.Except(productToUpdate.Categories.Select(c => c.Id)).ToList();
+
+        //Remove categories
+        foreach (var categoryIdToRemove in categoriesToRemove)
+        {
+            var categoryToRemove = productToUpdate.Categories.FirstOrDefault(c => c.Id == categoryIdToRemove);
+            if (categoryToRemove is not null)
+            {
+                productToUpdate.Categories.Remove(categoryToRemove);
+            }
+        }
+
+        //Add new categories
+        foreach (var categoryIdToAdd in categoriesToAdd)
+        {
+            var categoryToAdd = context.Categories.Find(categoryIdToAdd);
+            if (categoryToAdd is not null)
+            {
+                productToUpdate.Categories.Add(categoryToAdd);
+            }
+        }
+        context.SaveChanges();
 
         return product;
     }

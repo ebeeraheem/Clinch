@@ -44,24 +44,28 @@ public class ProductService
     }
 
     //Update a product
-    public async Task Update(int id, Product newProduct)
+    public async Task Update(int id, ProductUpdateDTO productUpdateDTO)
     {
-        if (newProduct is null || newProduct.Id != id)
+        if (productUpdateDTO is null || productUpdateDTO.Id != id)
         {
             throw new ArgumentException("Invalid ID or product");
         }
 
-        var validProduct = await ProductValidator
-            .ValidateProduct(newProduct, _context, true, id);
+        //Validate the product update DTO
+        var validProductDTO = await ProductValidator
+            .ValidateProduct(productUpdateDTO, _context, true, id);
 
-        var productToUpdate = await _context.Products.FindAsync(id);
+        //Get the product to update by its ID
+        var productToUpdate = await _context.Products.Include(p => p.Categories).SingleOrDefaultAsync(p => p.Id == id);
         if (productToUpdate is null)
         {
             throw new InvalidOperationException($"Product with id {id} not found");
         }
 
-        _context.Entry(productToUpdate).CurrentValues.SetValues(validProduct);
-
+        //Convert the product update DTO to Product
+        var product = await validProductDTO.UpdateToProduct(_context, productToUpdate);
+        
+        _context.Entry(productToUpdate).CurrentValues.SetValues(product);
         await _context.SaveChangesAsync();
     }
 

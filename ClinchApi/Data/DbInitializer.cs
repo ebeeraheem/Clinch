@@ -175,6 +175,7 @@ public static class DbInitializer
             //and add it to the product
             foreach (var product in products)
             {
+                product.Categories = new();
                 foreach (var id in product.CategoryId)
                 {
                     var category = context.Categories.Find(id);
