@@ -19,7 +19,6 @@ public class ProductsController : ControllerBase
         _productService = productService;
     }
 
-    //Get all products
     /// <summary>
     /// Get a list of all products with the applied filters
     /// </summary>
@@ -105,7 +104,12 @@ public class ProductsController : ControllerBase
         }
     }
 
-    //Update an existing product
+    /// <summary>
+    /// Updates a product
+    /// </summary>
+    /// <param name="id">ID of the product to be updated</param>
+    /// <param name="productUpdateDTO">Information about the product to update</param>
+    /// <returns>No content</returns>
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -136,7 +140,11 @@ public class ProductsController : ControllerBase
         }
     }
 
-    //Delete a product
+    /// <summary>
+    /// Deletes a product
+    /// </summary>
+    /// <param name="id">ID of the product to be deleted</param>
+    /// <returns>No content</returns>
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
