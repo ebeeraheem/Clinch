@@ -61,16 +61,7 @@ public class CategoriesController : ControllerBase
         {
             var category = await _categoryService.Create(newCategoryDTO);
 
-            Console.WriteLine("The category id is: " + category.Id);
-
             return CreatedAtAction(nameof(GetById), new { id = category.Id }, category);
-            //The above method returns a 500 Internal Server Error
-            //even though the resource was successfully created
-
-            //var uri = Url.Action(nameof(GetByIdAsync), new { id = category.Id });
-            ////For some reason, uri is null here. It should be api/category/<category.Id>
-
-            //return Created(uri, category);
         }
         catch (ArgumentException ex)
         {

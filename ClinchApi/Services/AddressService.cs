@@ -61,7 +61,7 @@ public class AddressService
         var addressToDelete = await _context.Addresses.FindAsync(id);
         if (addressToDelete is null)
         {
-            throw new InvalidOperationException("Address not found");
+            throw new InvalidOperationException($"Address with ID {id} not found");
         }
 
         _context.Addresses.Remove(addressToDelete);
