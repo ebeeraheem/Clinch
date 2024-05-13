@@ -52,14 +52,14 @@ public class CategoryService
             throw new ArgumentException("Invalid ID or category");
         }
 
-        var validCategory = await CategoryValidator
-            .ValidateCategory(newCategory, _context, true, id);
-
         var categoryToUpdate = await _context.Categories.FindAsync(id);
         if (categoryToUpdate is null)
         {
             throw new InvalidOperationException($"Category with ID {id} not found");
         }
+
+        var validCategory = await CategoryValidator
+            .ValidateCategory(newCategory, _context, true, id);
 
         categoryToUpdate.Name = validCategory.Name;
         await _context.SaveChangesAsync();
