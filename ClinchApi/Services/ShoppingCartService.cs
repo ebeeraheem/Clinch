@@ -26,6 +26,7 @@ public class ShoppingCartService
             throw new InvalidOperationException($"Product with id {productId} not found");
         }
 
+        //Any item that is out of stock should have the AddToCart endpoint disabled
         if (productToAdd.Quantity == 0)
         {
             throw new InvalidOperationException("Product out of stock");
@@ -46,7 +47,8 @@ public class ShoppingCartService
             };
         }
 
-        //Check if item already exists in cart
+        //Check if item already exists in the shoppingCart
+        //(although any item that is already in the cart should not have the AddToCart endpoint available)
         var existingItem = shoppingCart.ShoppingCartItems.FirstOrDefault(item => item.ProductId == productId);
 
         if (existingItem is null)
@@ -55,6 +57,7 @@ public class ShoppingCartService
             {
                 ShoppingCartId = shoppingCart.Id,
                 ProductId = productId,
+                Product = productToAdd,
                 Quantity = 1,
                 UnitPrice = productToAdd.Price
             });
@@ -72,6 +75,28 @@ public class ShoppingCartService
     }
 
     //Increase quantity (Some products might have max purchase limit)
+    public async Task<ShoppingCart> IncreaseQuantity(int userId, int productId)
+    {
+        //This should NEVER be null because having the IncreaseQuantity endpoint means
+        //the product already exists in the cart
+        var productToUpdate = await _context.Products.AsNoTracking()
+            .Include(p => p.Categories)
+            .SingleOrDefaultAsync(p => p.Id == productId);
+
+        //This should also NEVER be null for the same reason as above
+        //Get the shopping cart based on the userId
+        var shoppingCart = _context.ShoppingCarts
+            .SingleOrDefault(c => c.UserId == userId);
+
+        var itemToUpdate = shoppingCart.ShoppingCartItems.FirstOrDefault(item => item.ProductId == productId);
+
+        //Increase the quantityof the item by one
+        itemToUpdate.Quantity++;
+
+        await _context.SaveChangesAsync();
+
+        return shoppingCart;
+    }
 
     //Decrease quantity (remove from cart if quantity = 0)
 
