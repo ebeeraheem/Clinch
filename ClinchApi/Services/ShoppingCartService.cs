@@ -99,6 +99,36 @@ public class ShoppingCartService
     }
 
     //Decrease quantity (remove from cart if quantity = 0)
+    public async Task<ShoppingCart> DecreaseQuantity(int userId, int productId)
+    {
+        //This should NEVER be null because having the IncreaseQuantity endpoint means
+        //the product already exists in the cart
+        var productToUpdate = await _context.Products.AsNoTracking()
+            .Include(p => p.Categories)
+            .SingleOrDefaultAsync(p => p.Id == productId);
+
+        //This should also NEVER be null for the same reason as above
+        //Get the shopping cart based on the userId
+        var shoppingCart = _context.ShoppingCarts
+            .SingleOrDefault(c => c.UserId == userId);
+
+        var itemToUpdate = shoppingCart.ShoppingCartItems.FirstOrDefault(item => item.ProductId == productId);
+
+        if (itemToUpdate.Quantity == 1)
+        {
+            shoppingCart.ShoppingCartItems.Remove(itemToUpdate);
+        }
+        else
+        {
+            itemToUpdate.Quantity--;
+        }
+        
+        await _context.SaveChangesAsync();
+
+        return shoppingCart;
+    }
 
     //Remove from cart
+
+    //Clear cart
 }
