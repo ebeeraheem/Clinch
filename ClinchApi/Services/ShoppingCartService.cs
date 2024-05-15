@@ -110,8 +110,11 @@ public class ShoppingCartService
             //Increase the quantity of the item by one
             itemToUpdate.Quantity++;
 
-            //Decrease the quantity of the product by one
-            product.Quantity--;
+            ////Decrease the quantity of the product by one
+            ////NOTE: it's not good to decrease the quantity of a product
+            ////just because somebody added it to their cart
+            ////because they might not buy it at all
+            //product.Quantity--;
 
             await _context.SaveChangesAsync();
             transaction.Commit();
