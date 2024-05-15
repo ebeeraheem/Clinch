@@ -34,6 +34,7 @@ public class ShoppingCartService
 
         //Get the shopping cart based on the user ID
         var shoppingCart = _context.ShoppingCarts
+            .Include(c => c.ShoppingCartItems)
             .SingleOrDefault(c => c.UserId == userId);
 
         if (shoppingCart is null)
@@ -119,6 +120,7 @@ public class ShoppingCartService
         {
             //Get the shopping cart based on the userId
             var shoppingCart = _context.ShoppingCarts
+                .Include(c => c.ShoppingCartItems)
                 .SingleOrDefault(c => c.UserId == userId);
 
             //Get the item to update from the cart
@@ -153,6 +155,7 @@ public class ShoppingCartService
     {
         //Get the shopping cart based on the userId
         var shoppingCart = _context.ShoppingCarts
+            .Include(c => c.ShoppingCartItems)
             .SingleOrDefault(c => c.UserId == userId);
 
         //Get the item to update from the cart
@@ -177,6 +180,7 @@ public class ShoppingCartService
     {
         //Get the shopping cart based on the userId
         var shoppingCart = _context.ShoppingCarts
+            .Include(c => c.ShoppingCartItems)
             .SingleOrDefault(c => c.UserId == userId);
 
         //Get the item to remove from the shopping cart
@@ -195,6 +199,7 @@ public class ShoppingCartService
     {
         //Get the shopping cart based on the userId
         var shoppingCart = _context.ShoppingCarts
+            .Include(c => c.ShoppingCartItems)
             .SingleOrDefault(c => c.UserId == userId);
 
         //Get all the items in the cart
