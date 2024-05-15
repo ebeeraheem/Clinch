@@ -90,21 +90,26 @@ public class ShoppingCartService
     //Increase quantity (Some products might have max purchase limit)
     public async Task<ShoppingCart> IncreaseQuantity(int userId, int productId)
     {
-        //This should NEVER be null because having the IncreaseQuantity endpoint means
-        //the product already exists in the cart
-        var productToUpdate = await _context.Products.AsNoTracking()
-            .Include(p => p.Categories)
-            .SingleOrDefaultAsync(p => p.Id == productId);
-
-        //This should also NEVER be null for the same reason as above
         //Get the shopping cart based on the userId
         var shoppingCart = _context.ShoppingCarts
             .SingleOrDefault(c => c.UserId == userId);
 
+        //Get the item to update from the cart
         var itemToUpdate = shoppingCart.ShoppingCartItems.FirstOrDefault(item => item.ProductId == productId);
 
-        //Increase the quantityof the item by one
+        //Check the quantity of the product available
+        var product = await _context.Products
+            .SingleOrDefaultAsync(p => p.Id == productId);
+        if (product.Quantity == 0)
+        {
+            throw new InvalidOperationException("Product out of stock");
+        }
+
+        //Increase the quantity of the item by one
         itemToUpdate.Quantity++;
+
+        //Decrease the quantity of the product by one
+        product.Quantity--;
 
         await _context.SaveChangesAsync();
 
