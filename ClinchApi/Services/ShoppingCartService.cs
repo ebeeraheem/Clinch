@@ -88,11 +88,12 @@ public class ShoppingCartService
     }
 
     //Get all items in the user's shopping cart
-    public List<ShoppingCartItem> GetCart(int userId)
+    public async Task<List<ShoppingCartItem>> GetCart(int userId)
     {
         //Get the shopping cart based on the user ID
-        var shoppingCart = _context.ShoppingCarts
-            .SingleOrDefault(c => c.UserId == userId);
+        var shoppingCart = await _context.ShoppingCarts
+            .Include(c => c.ShoppingCartItems)
+            .SingleOrDefaultAsync(c => c.UserId == userId);
 
         if (shoppingCart is null)
         {
@@ -103,6 +104,9 @@ public class ShoppingCartService
                 ShoppingCartItems = new(),
                 CreatedAt = DateTime.UtcNow
             };
+
+            _context.ShoppingCarts.Add(shoppingCart);
+            await _context.SaveChangesAsync();
         }
 
         return shoppingCart.ShoppingCartItems;
