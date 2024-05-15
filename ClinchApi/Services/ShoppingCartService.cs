@@ -18,7 +18,6 @@ public class ShoppingCartService
     {
         //Get the product to add to the cart
         var productToAdd = await _context.Products.AsNoTracking()
-            .Include(p => p.Categories)
             .SingleOrDefaultAsync(p => p.Id == productId);
 
         if (productToAdd is null)
@@ -26,11 +25,7 @@ public class ShoppingCartService
             throw new InvalidOperationException($"Product with id {productId} not found");
         }
 
-        ////NOTE: Any item that is out of stock should have the AddToCart endpoint disabled
-        //if (productToAdd.Quantity == 0)
-        //{
-        //    throw new InvalidOperationException("Product out of stock");
-        //}
+        //NOTE: Any item that is out of stock should have the AddToCart endpoint disabled
 
         //Get the shopping cart based on the user ID
         var shoppingCart = _context.ShoppingCarts
@@ -43,48 +38,34 @@ public class ShoppingCartService
             shoppingCart = new()
             {
                 UserId = userId,
+                ShoppingCartItemIds = new(),
                 ShoppingCartItems = new(),
                 CreatedAt = DateTime.UtcNow
             };
+
+            _context.ShoppingCarts.Add(shoppingCart);
+            await _context.SaveChangesAsync();
         }
-
-        ////Check if item already exists in the shoppingCart
-        ////(NOTE: any item that is already in the cart should not have the AddToCart endpoint available)
-        //var existingItem = shoppingCart.ShoppingCartItems.FirstOrDefault(item => item.ProductId == productId);
-
-        //if (existingItem is null)
-        //{
-        //    shoppingCart.ShoppingCartItems.Add(new ShoppingCartItem()
-        //    {
-        //        ShoppingCartId = shoppingCart.Id,
-        //        ProductId = productId,
-        //        Product = productToAdd,
-        //        Quantity = 1,
-        //        UnitPrice = productToAdd.Price
-        //    });
-        //}
-        //else
-        //{
-        //    //NOTE: the AddToCart endpoint should NOT be available
-        //    //to products that are already in the cart!!
-        //    existingItem.Quantity = existingItem.Quantity + 1;
-        //}
+        
+        //Check if item already exists in the shoppingCart
+        //NOTE: any item that is already in the cart should not have the AddToCart endpoint available
 
         //Create the item to add to the cart
         var itemToAdd = new ShoppingCartItem()
         {
             ShoppingCartId = shoppingCart.Id,
             ProductId = productId,
-            Product = productToAdd,
             Quantity = 1,
             UnitPrice = productToAdd.Price
         };
-
+        
         //Add the item to the cart
-        shoppingCart.ShoppingCartItems.Add(itemToAdd);
-
+        _context.ShoppingCartItems.Add(itemToAdd);
         await _context.SaveChangesAsync();
 
+        shoppingCart.ShoppingCartItemIds.Add(itemToAdd.Id);        
+        await _context.SaveChangesAsync();
+        
         return shoppingCart;
     }
 
@@ -102,6 +83,7 @@ public class ShoppingCartService
             shoppingCart = new()
             {
                 UserId = userId,
+                ShoppingCartItemIds = new(),
                 ShoppingCartItems = new(),
                 CreatedAt = DateTime.UtcNow
             };

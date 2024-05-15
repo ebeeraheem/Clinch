@@ -38,6 +38,7 @@ public class CategoryService
             .ValidateCategory(newCategoryDTO, _context);
 
         var category = new Category() { Name = validCategoryDTO.Name };
+
         _context.Categories.Add(category);
         await _context.SaveChangesAsync();
 
