@@ -148,7 +148,7 @@ public class ShoppingCartService
     }
 
     //Remove from cart
-    public async Task RemoveFromCart(int userId, int productId)
+    public async Task<ShoppingCart> RemoveFromCart(int userId, int productId)
     {
         //Get the shopping cart based on the userId
         var shoppingCart = _context.ShoppingCarts
@@ -161,10 +161,12 @@ public class ShoppingCartService
         shoppingCart.ShoppingCartItems.Remove(itemToRemove);
         
         await _context.SaveChangesAsync();
+
+        return shoppingCart;
     }
 
     //Clear cart
-    public async Task ClearCart(int userId)
+    public async Task<ShoppingCart> ClearCart(int userId)
     {
         //Get the shopping cart based on the userId
         var shoppingCart = _context.ShoppingCarts
@@ -180,5 +182,7 @@ public class ShoppingCartService
         }
 
         await _context.SaveChangesAsync();
+
+        return shoppingCart;
     }
 }
