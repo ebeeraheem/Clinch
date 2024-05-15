@@ -87,6 +87,27 @@ public class ShoppingCartService
         return shoppingCart;
     }
 
+    //Get all items in the user's shopping cart
+    public List<ShoppingCartItem> GetCart(int userId)
+    {
+        //Get the shopping cart based on the user ID
+        var shoppingCart = _context.ShoppingCarts
+            .SingleOrDefault(c => c.UserId == userId);
+
+        if (shoppingCart is null)
+        {
+            //Create a new cart if it doesn't exist
+            shoppingCart = new()
+            {
+                UserId = userId,
+                ShoppingCartItems = new(),
+                CreatedAt = DateTime.UtcNow
+            };
+        }
+
+        return shoppingCart.ShoppingCartItems;
+    }
+
     //Increase quantity (Some products might have max purchase limit)
     public async Task<ShoppingCart> IncreaseQuantity(int userId, int productId)
     {
