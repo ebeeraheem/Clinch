@@ -78,7 +78,7 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Product>> Post([FromBody] ProductDTO newProductDTO)
+    public async Task<ActionResult<Product>> Create([FromBody] ProductDTO newProductDTO)
     {
         try
         {
@@ -115,7 +115,7 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Put(int id, [FromBody] ProductUpdateDTO productUpdateDTO)
+    public async Task<IActionResult> Update(int id, [FromBody] ProductUpdateDTO productUpdateDTO)
     {
         try
         {
