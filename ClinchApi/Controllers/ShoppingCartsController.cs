@@ -79,4 +79,24 @@ public class ShoppingCartsController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
         }
     }
+
+    [HttpDelete("{userId}/RemoveFromCart/{productId}")]
+    public async Task<ActionResult<ShoppingCart>> RemoveFromCart(int userId, int productId)
+    {
+        try
+        {
+            var removeResponse = await _cartService
+                .RemoveFromCart(userId, productId);
+
+            return removeResponse;
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
+        }
+    }
 }

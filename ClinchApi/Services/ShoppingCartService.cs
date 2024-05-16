@@ -162,6 +162,7 @@ public class ShoppingCartService
     }
 
     //Remove from cart
+    //NOTE: This endpoint should not be available to products that are not in the cart
     public async Task<ShoppingCart> RemoveFromCart(int userId, int productId)
     {
         //Get the shopping cart based on the userId
@@ -170,9 +171,11 @@ public class ShoppingCartService
             .SingleOrDefault(c => c.UserId == userId);
 
         //Get the item to remove from the shopping cart
+        //NOTE: This will NEVER be null
         var itemToRemove = shoppingCart.ShoppingCartItems.FirstOrDefault(item => item.ProductId == productId);
 
         //Remove the item
+        shoppingCart.ShoppingCartItemIds.Remove(itemToRemove.Id);
         shoppingCart.ShoppingCartItems.Remove(itemToRemove);
         
         await _context.SaveChangesAsync();
