@@ -40,7 +40,7 @@ public class ShoppingCartsController : ControllerBase
         }
     }
 
-    [HttpPost("{userId}/{productId}")]
+    [HttpPost("{userId}/IncreaseQuantity/{productId}")]
     public async Task<ActionResult<ShoppingCart>> IncreaseQuantity(int userId, int productId)
     {
         try
@@ -49,6 +49,26 @@ public class ShoppingCartsController : ControllerBase
                 .IncreaseQuantity(userId, productId);
 
             return increaseResponse;
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
+        }
+    }
+
+    [HttpPost("{userId}/DecreaseQuantity/{productId}")]
+    public async Task<ActionResult<ShoppingCart>> DecreaseQuantity(int userId, int productId)
+    {
+        try
+        {
+            var decreaseResponse = await _cartService
+                .DecreaseQuantity(userId, productId);
+
+            return decreaseResponse;
         }
         catch (InvalidOperationException ex)
         {

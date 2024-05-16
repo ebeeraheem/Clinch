@@ -135,6 +135,7 @@ public class ShoppingCartService
     }
 
     //Decrease quantity (remove from cart if quantity = 0)
+    //NOTE: This endpoint should not be available to products that are not in the cart
     public async Task<ShoppingCart> DecreaseQuantity(int userId, int productId)
     {
         //Get the shopping cart based on the userId
@@ -147,6 +148,7 @@ public class ShoppingCartService
 
         if (itemToUpdate.Quantity == 1)
         {
+            shoppingCart.ShoppingCartItemIds.Remove(itemToUpdate.Id);
             shoppingCart.ShoppingCartItems.Remove(itemToUpdate);
         }
         else
