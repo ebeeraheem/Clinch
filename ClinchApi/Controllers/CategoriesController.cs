@@ -55,7 +55,7 @@ public class CategoriesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Category>> Post([FromBody] CategoryDTO newCategoryDTO)
+    public async Task<ActionResult<Category>> Create([FromBody] CategoryDTO newCategoryDTO)
     {
         try
         {
@@ -84,7 +84,7 @@ public class CategoriesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Put(int id, [FromBody] Category newCategory)
+    public async Task<IActionResult> Update(int id, [FromBody] Category newCategory)
     {
         try
         {
@@ -110,7 +110,7 @@ public class CategoriesController : ControllerBase
     /// </summary>
     /// <param name="id">ID of the category to be deteled</param>
     /// <returns>No content</returns>
-    [HttpDelete]
+    [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
