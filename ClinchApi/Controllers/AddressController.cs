@@ -43,7 +43,7 @@ public class AddressController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Address>> Post([FromBody] AddressDTO newAddressDTO)
+    public async Task<ActionResult<Address>> Create([FromBody] AddressDTO newAddressDTO)
     {
         try
         {
@@ -67,11 +67,11 @@ public class AddressController : ControllerBase
     /// <param name="id">ID of the address to be updated</param>
     /// <param name="address">Information to update the address</param>
     /// <returns>No content</returns>
-    [HttpPut]
+    [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> Put(int id, [FromBody] Address address)
+    public async Task<ActionResult> Update(int id, [FromBody] Address address)
     {
         try
         {
@@ -97,7 +97,7 @@ public class AddressController : ControllerBase
     /// </summary>
     /// <param name="id">ID of the address to be deleted</param>
     /// <returns>No content</returns>
-    [HttpDelete]
+    [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Delete(int id)
