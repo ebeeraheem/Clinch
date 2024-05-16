@@ -16,13 +16,13 @@ public class ShoppingCartsController : ControllerBase
         _cartService = cartService;
     }
 
-    [HttpGet("{userId}/CartItems")]
+    [HttpGet("{userId}/cart")]
     public async Task<ActionResult<List<ShoppingCartItem>>> GetCart(int userId)
     {
         return await _cartService.GetCart(userId);
     }
 
-    [HttpPost("{userId}/AddToCart/{productId}")]
+    [HttpPost("{userId}/cart/add/{productId}")]
     public async Task<ActionResult<ShoppingCart>> AddToCart(int userId, int productId)
     {
         try
@@ -40,7 +40,7 @@ public class ShoppingCartsController : ControllerBase
         }
     }
 
-    [HttpPost("{userId}/IncreaseQuantity/{productId}")]
+    [HttpPost("{userId}/cart/increase/{productId}")]
     public async Task<ActionResult<ShoppingCart>> IncreaseQuantity(int userId, int productId)
     {
         try
@@ -60,7 +60,7 @@ public class ShoppingCartsController : ControllerBase
         }
     }
 
-    [HttpPost("{userId}/DecreaseQuantity/{productId}")]
+    [HttpPost("{userId}/cart/decrease/{productId}")]
     public async Task<ActionResult<ShoppingCart>> DecreaseQuantity(int userId, int productId)
     {
         try
@@ -80,7 +80,7 @@ public class ShoppingCartsController : ControllerBase
         }
     }
 
-    [HttpDelete("{userId}/RemoveFromCart/{productId}")]
+    [HttpDelete("{userId}/cart/remove/{productId}")]
     public async Task<ActionResult<ShoppingCart>> RemoveFromCart(int userId, int productId)
     {
         try
@@ -96,7 +96,7 @@ public class ShoppingCartsController : ControllerBase
         }
     }
 
-    [HttpDelete("{userId}/ClearCart")]
+    [HttpDelete("{userId}/cart/clear")]
     public async Task<ActionResult<ShoppingCart>> ClearCart(int userId)
     {
         try
