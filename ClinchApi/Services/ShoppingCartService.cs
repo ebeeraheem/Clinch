@@ -172,9 +172,10 @@ public class ShoppingCartService
 
         //Get the item to remove from the shopping cart
         //NOTE: This will NEVER be null
-        var itemToRemove = shoppingCart.ShoppingCartItems.FirstOrDefault(item => item.ProductId == productId);
+        var itemToRemove = shoppingCart.ShoppingCartItems
+            .FirstOrDefault(item => item.ProductId == productId);
 
-        //Remove the item
+        //Remove the item and its associated ID
         shoppingCart.ShoppingCartItemIds.Remove(itemToRemove.Id);
         shoppingCart.ShoppingCartItems.Remove(itemToRemove);
         
@@ -184,6 +185,7 @@ public class ShoppingCartService
     }
 
     //Clear cart
+    //NOTE: This endpoint should NOT be available in an empty cart
     public async Task<ShoppingCart> ClearCart(int userId)
     {
         //Get the shopping cart based on the userId
@@ -192,11 +194,12 @@ public class ShoppingCartService
             .SingleOrDefault(c => c.UserId == userId);
 
         //Get all the items in the cart
-        var cartItems = shoppingCart.ShoppingCartItems;
+        var cartItems = shoppingCart.ShoppingCartItems.ToList();
 
-        //Remove all the items
+        //Remove all the items and their associated IDs
         foreach (var item in cartItems)
         {
+            shoppingCart.ShoppingCartItemIds.Remove(item.Id);
             shoppingCart.ShoppingCartItems.Remove(item);
         }
 

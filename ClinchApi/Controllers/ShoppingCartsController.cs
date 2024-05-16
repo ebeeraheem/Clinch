@@ -16,7 +16,7 @@ public class ShoppingCartsController : ControllerBase
         _cartService = cartService;
     }
 
-    [HttpGet]
+    [HttpGet("{userId}/CartItems")]
     public async Task<ActionResult<List<ShoppingCartItem>>> GetCart(int userId)
     {
         return await _cartService.GetCart(userId);
@@ -89,6 +89,21 @@ public class ShoppingCartsController : ControllerBase
                 .RemoveFromCart(userId, productId);
 
             return removeResponse;
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
+        }
+    }
+
+    [HttpDelete("{userId}/ClearCart")]
+    public async Task<ActionResult<ShoppingCart>> ClearCart(int userId)
+    {
+        try
+        {
+            var cart = await _cartService.ClearCart(userId);
+
+            return cart;
         }
         catch (Exception)
         {
