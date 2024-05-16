@@ -27,8 +27,7 @@ public class ShoppingCartsController : ControllerBase
     {
         try
         {
-            var cart = await _cartService.AddToCart(userId, productId);
-            return cart;
+            return await _cartService.AddToCart(userId, productId);
         }
         catch (InvalidOperationException ex)
         {
@@ -45,10 +44,7 @@ public class ShoppingCartsController : ControllerBase
     {
         try
         {
-            var increaseResponse = await _cartService
-                .IncreaseQuantity(userId, productId);
-
-            return increaseResponse;
+            return await _cartService.IncreaseQuantity(userId, productId);
         }
         catch (InvalidOperationException ex)
         {
@@ -65,10 +61,7 @@ public class ShoppingCartsController : ControllerBase
     {
         try
         {
-            var decreaseResponse = await _cartService
-                .DecreaseQuantity(userId, productId);
-
-            return decreaseResponse;
+            return await _cartService.DecreaseQuantity(userId, productId);
         }
         catch (InvalidOperationException ex)
         {
@@ -85,10 +78,10 @@ public class ShoppingCartsController : ControllerBase
     {
         try
         {
-            var removeResponse = await _cartService
+            var updatedCart = await _cartService
                 .RemoveFromCart(userId, productId);
 
-            return removeResponse;
+            return updatedCart;
         }
         catch (Exception)
         {
@@ -101,9 +94,7 @@ public class ShoppingCartsController : ControllerBase
     {
         try
         {
-            var cart = await _cartService.ClearCart(userId);
-
-            return cart;
+            return await _cartService.ClearCart(userId);
         }
         catch (Exception)
         {
