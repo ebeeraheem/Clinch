@@ -110,7 +110,7 @@ public class ProductsController : ControllerBase
     /// <param name="id">ID of the product to be updated</param>
     /// <param name="productUpdateDTO">Information about the product to update</param>
     /// <returns>No content</returns>
-    [HttpPut]
+    [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -145,7 +145,7 @@ public class ProductsController : ControllerBase
     /// </summary>
     /// <param name="id">ID of the product to be deleted</param>
     /// <returns>No content</returns>
-    [HttpDelete]
+    [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
