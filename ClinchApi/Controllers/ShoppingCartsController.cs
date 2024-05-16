@@ -90,10 +90,6 @@ public class ShoppingCartsController : ControllerBase
 
             return removeResponse;
         }
-        catch (InvalidOperationException ex)
-        {
-            return NotFound(ex.Message);
-        }
         catch (Exception)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
