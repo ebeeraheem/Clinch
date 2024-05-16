@@ -96,6 +96,7 @@ public class ShoppingCartService
     }
 
     //Increase quantity (Some products might have max purchase limit)
+    //NOTE: This endpoint should not be available to products that are not in the cart
     public async Task<ShoppingCart> IncreaseQuantity(int userId, int productId)
     {
         using(var transaction = _context.Database.BeginTransaction())
@@ -106,7 +107,8 @@ public class ShoppingCartService
                 .SingleOrDefault(c => c.UserId == userId);
 
             //Get the item to update from the cart
-            var itemToUpdate = shoppingCart.ShoppingCartItems.FirstOrDefault(item => item.ProductId == productId);
+            var itemToUpdate = shoppingCart.ShoppingCartItems
+                .FirstOrDefault(item => item.ProductId == productId);
 
             //Check the quantity of the product available
             var product = await _context.Products

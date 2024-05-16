@@ -22,13 +22,33 @@ public class ShoppingCartsController : ControllerBase
         return await _cartService.GetCart(userId);
     }
 
-    [HttpPost]
+    [HttpPost("{userId}/AddToCart/{productId}")]
     public async Task<ActionResult<ShoppingCart>> AddToCart(int userId, int productId)
     {
         try
         {
             var cart = await _cartService.AddToCart(userId, productId);
             return cart;
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
+        }
+    }
+
+    [HttpPost("{userId}/{productId}")]
+    public async Task<ActionResult<ShoppingCart>> IncreaseQuantity(int userId, int productId)
+    {
+        try
+        {
+            var increaseResponse = await _cartService
+                .IncreaseQuantity(userId, productId);
+
+            return increaseResponse;
         }
         catch (InvalidOperationException ex)
         {
