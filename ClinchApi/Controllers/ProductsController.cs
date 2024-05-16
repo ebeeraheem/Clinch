@@ -78,7 +78,7 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Product>> Post(ProductDTO newProductDTO)
+    public async Task<ActionResult<Product>> Post([FromBody] ProductDTO newProductDTO)
     {
         try
         {
