@@ -257,6 +257,21 @@ public class ShoppingCartService
             .Include(c => c.ShoppingCartItems)
             .SingleOrDefault(c => c.UserId == userId);
 
+        if (shoppingCart is null)
+        {
+            //Create a new cart if it doesn't exist
+            shoppingCart = new()
+            {
+                UserId = userId,
+                ShoppingCartItemIds = new(),
+                ShoppingCartItems = new(),
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.ShoppingCarts.Add(shoppingCart);
+            await _context.SaveChangesAsync();
+        }
+
         //Get all the items in the cart
         var cartItems = shoppingCart.ShoppingCartItems.ToList();
 
