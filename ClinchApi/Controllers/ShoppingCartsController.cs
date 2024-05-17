@@ -22,9 +22,11 @@ public class ShoppingCartsController : ControllerBase
     /// <param name="userId">ID of the user whose cart is to be retrieved</param>
     /// <returns>A list of shopping cart items</returns>
     [HttpGet("{userId}/cart")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<List<ShoppingCartItem>>> GetCart(int userId)
     {
-        return await _cartService.GetCart(userId);
+        var cart = await _cartService.GetCart(userId);
+        return Ok(cart);
     }
 
     /// <summary>
@@ -34,11 +36,16 @@ public class ShoppingCartsController : ControllerBase
     /// <param name="productId">ID of the product to add to the cart</param>
     /// <returns>The user's shopping cart</returns>
     [HttpPost("{userId}/cart/add/{productId}")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ShoppingCart>> AddToCart(int userId, int productId)
     {
         try
         {
-            return await _cartService.AddToCart(userId, productId);
+            var updatedCart = await _cartService.AddToCart(userId, productId);
+            return CreatedAtAction(nameof(GetCart), new { userId }, updatedCart);
         }
         catch (InvalidOperationException ex)
         {
@@ -61,11 +68,16 @@ public class ShoppingCartsController : ControllerBase
     /// <param name="productId">ID of the product whose quantity is to be increased</param>
     /// <returns>The user's shopping cart</returns>
     [HttpPost("{userId}/cart/increase/{productId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ShoppingCart>> IncreaseQuantity(int userId, int productId)
     {
         try
         {
-            return await _cartService.IncreaseQuantity(userId, productId);
+            var updatedCart = await _cartService.IncreaseQuantity(userId, productId);
+            return Ok(updatedCart);
         }
         catch (ArgumentException ex)
         {
@@ -88,11 +100,15 @@ public class ShoppingCartsController : ControllerBase
     /// <param name="productId">ID of the product whose quantity is to be decreased</param>
     /// <returns>The user's shopping cart</return
     [HttpPost("{userId}/cart/decrease/{productId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ShoppingCart>> DecreaseQuantity(int userId, int productId)
     {
         try
         {
-            return await _cartService.DecreaseQuantity(userId, productId);
+            var updatedCart = await _cartService.DecreaseQuantity(userId, productId);
+            return Ok(updatedCart);
         }
         catch (ArgumentException ex)
         {
@@ -111,11 +127,15 @@ public class ShoppingCartsController : ControllerBase
     /// <param name="productId">ID of the product to be removed</param>
     /// <returns>The user's shopping cart</returns>
     [HttpDelete("{userId}/cart/remove/{productId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ShoppingCart>> RemoveFromCart(int userId, int productId)
     {
         try
         {
-            return await _cartService.RemoveFromCart(userId, productId);
+            await _cartService.RemoveFromCart(userId, productId);
+            return NoContent();
         }
         catch (ArgumentException ex)
         {
@@ -133,11 +153,14 @@ public class ShoppingCartsController : ControllerBase
     /// <param name="userId">ID of the user whose cart is to be cleared</param>
     /// <returns>The user's empty cart</returns>
     [HttpDelete("{userId}/cart/clear")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ShoppingCart>> ClearCart(int userId)
     {
         try
         {
-            return await _cartService.ClearCart(userId);
+            await _cartService.ClearCart(userId);
+            return NoContent();
         }
         catch (Exception)
         {
