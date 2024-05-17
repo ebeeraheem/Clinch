@@ -94,7 +94,7 @@ public class ShoppingCartsController : ControllerBase
         {
             return await _cartService.DecreaseQuantity(userId, productId);
         }
-        catch (InvalidOperationException ex)
+        catch (ArgumentException ex)
         {
             return NotFound(ex.Message);
         }
