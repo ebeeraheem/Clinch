@@ -138,6 +138,12 @@ public class ShoppingCartService
             //Check the quantity of the product available
             var product = await _context.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
+
+            if (product is null)
+            {
+                throw new ArgumentException($"Product with ID {productId} does not exist");
+            }
+
             if (product.Quantity == 0)
             {
                 throw new InvalidOperationException("Product out of stock");
