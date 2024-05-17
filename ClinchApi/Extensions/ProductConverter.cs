@@ -1,8 +1,6 @@
 ﻿using ClinchApi.Data;
 using ClinchApi.Models;
 using ClinchApi.Models.DTOs;
-using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
 
 namespace ClinchApi.Extensions;
 

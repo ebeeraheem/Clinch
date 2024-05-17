@@ -27,7 +27,7 @@ public class ProductService
     {
         return await _context.Products.AsNoTracking()
             .Include(p => p.Categories)
-            .SingleOrDefaultAsync(p => p.Id  == id);
+            .SingleOrDefaultAsync(p => p.Id == id);
     }
 
     //Create a product
@@ -68,7 +68,7 @@ public class ProductService
         //Convert the product update DTO to Product
         var product = await validProductDTO
             .UpdateToProduct(_context, productToUpdate);
-        
+
         _context.Entry(productToUpdate).CurrentValues.SetValues(product);
         await _context.SaveChangesAsync();
     }

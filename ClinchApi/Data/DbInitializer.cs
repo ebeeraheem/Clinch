@@ -1,6 +1,4 @@
 ﻿using ClinchApi.Models;
-using ClinchApi.Models.DTOs;
-using Microsoft.EntityFrameworkCore;
 
 namespace ClinchApi.Data;
 
@@ -8,20 +6,20 @@ public static class DbInitializer
 {
     public static async void Initialize(ApplicationDbContext context)
     {
-		if (!context.Addresses.Any())
-		{
-			var rZaki = new Address()
-			{
-				StreetAddress = "Layin Mahalli, Rijiyar Zaki",
-				City = "Kano",
-				State = "Kano State",
-				Country = "Nigeria",
-				PostalCode = "700001",
-				IsBillingAddress = true,
-				IsShippingAddress = false
-			};
-			var dorayi = new Address()
-			{
+        if (!context.Addresses.Any())
+        {
+            var rZaki = new Address()
+            {
+                StreetAddress = "Layin Mahalli, Rijiyar Zaki",
+                City = "Kano",
+                State = "Kano State",
+                Country = "Nigeria",
+                PostalCode = "700001",
+                IsBillingAddress = true,
+                IsShippingAddress = false
+            };
+            var dorayi = new Address()
+            {
                 StreetAddress = "Layin Masallacin Dan Sarari",
                 City = "Kano",
                 State = "Kano State",
@@ -30,8 +28,8 @@ public static class DbInitializer
                 IsBillingAddress = true,
                 IsShippingAddress = true
             };
-			var abuja = new Address()
-			{
+            var abuja = new Address()
+            {
                 StreetAddress = "Maitama Street",
                 City = "Abuja",
                 State = "FCT",
@@ -41,11 +39,11 @@ public static class DbInitializer
                 IsShippingAddress = false
             };
 
-			context.Addresses.AddRange(rZaki, dorayi, abuja);
+            context.Addresses.AddRange(rZaki, dorayi, abuja);
         }
 
-		if (!context.Categories.Any())
-		{
+        if (!context.Categories.Any())
+        {
             var uncategorized = new Category { Name = "Uncategorized" };
             var phonesCategory = new Category { Name = "Phones" };
             var laptopsCategory = new Category { Name = "Laptops" };
@@ -57,19 +55,19 @@ public static class DbInitializer
 
             await context.Categories.AddRangeAsync(
                 uncategorized,
-                phonesCategory, 
+                phonesCategory,
                 laptopsCategory,
                 gadgetsCategory,
-                foodCategory, 
+                foodCategory,
                 fashionCategory,
                 watchesCategory,
-                electronicsCategory); 
+                electronicsCategory);
 
             context.SaveChanges();
         }
 
-		if (!context.Products.Any())
-		{
+        if (!context.Products.Any())
+        {
             var products = new Product[]
             {
                 new()

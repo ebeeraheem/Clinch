@@ -5,9 +5,9 @@ namespace ClinchApi.Data;
 
 public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : 
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
         base(options)
-    {        
+    {
     }
 
     public DbSet<User> Users { get; set; }
@@ -20,14 +20,14 @@ public class ApplicationDbContext : DbContext
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<Payment> Payments { get; set; }
 
-    
+
     //Specify the decimal precision for all decimal properties to avoid silent truncating
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         var decimalProps = modelBuilder.Model
         .GetEntityTypes()
         .SelectMany(t => t.GetProperties())
-        .Where(p => (Nullable.GetUnderlyingType(p.ClrType) ?? 
+        .Where(p => (Nullable.GetUnderlyingType(p.ClrType) ??
             p.ClrType) == typeof(decimal));
 
         foreach (var property in decimalProps)

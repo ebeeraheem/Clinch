@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ClinchApi.Models;
+﻿namespace ClinchApi.Models;
 
 public class OrderItem
 {

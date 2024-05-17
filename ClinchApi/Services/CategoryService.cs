@@ -3,8 +3,6 @@ using ClinchApi.Extensions;
 using ClinchApi.Models;
 using ClinchApi.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ClinchApi.Services;
 

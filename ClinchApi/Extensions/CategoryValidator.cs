@@ -7,10 +7,10 @@ namespace ClinchApi.Extensions;
 public class CategoryValidator
 {
     public static async Task<T> ValidateCategory<T>(
-        T category, 
-        ApplicationDbContext context, 
+        T category,
+        ApplicationDbContext context,
         bool isUpdate = false,
-        int id = 0) 
+        int id = 0)
         where T : ICategoryBase
     {
         if (string.IsNullOrWhiteSpace(category.Name))
@@ -19,8 +19,8 @@ public class CategoryValidator
         }
 
         if (await context.Categories.AnyAsync(
-            c => c.Name.ToLower() == category.Name.ToLower() && 
-            (isUpdate ? c.Id != id : true) ))
+            c => c.Name.ToLower() == category.Name.ToLower() &&
+            (isUpdate ? c.Id != id : true)))
         {
             throw new ArgumentException("Category with the same name already exists");
         }

@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace ClinchApi.Models;
+﻿namespace ClinchApi.Models;
 
 public class ShoppingCartItem
 {

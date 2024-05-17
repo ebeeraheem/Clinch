@@ -6,11 +6,11 @@ public static class ProductFilter
 {
     public static IEnumerable<Product> FilterProducts(
         IEnumerable<Product> products,
-        decimal? maxPrice, 
-        decimal? minPrice, 
+        decimal? maxPrice,
+        decimal? minPrice,
         int? lowStock,
-        int? categoryId, 
-        DateTime? createdAfter, 
+        int? categoryId,
+        DateTime? createdAfter,
         DateTime? createdBefore)
     {
         if (maxPrice.HasValue)

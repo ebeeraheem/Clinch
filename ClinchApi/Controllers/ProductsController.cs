@@ -1,9 +1,7 @@
-﻿using ClinchApi.Data;
-using ClinchApi.Extensions;
+﻿using ClinchApi.Extensions;
 using ClinchApi.Models;
 using ClinchApi.Models.DTOs;
 using ClinchApi.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClinchApi.Controllers;
@@ -42,12 +40,12 @@ public class ProductsController : ControllerBase
     {
         var products = await _productService.GetProducts();
         products = ProductFilter.FilterProducts(
-            products, 
-            maxPrice, 
-            minPrice, 
-            lowStock, 
-            categoryId, 
-            createdAfter, 
+            products,
+            maxPrice,
+            minPrice,
+            lowStock,
+            categoryId,
+            createdAfter,
             createdBefore);
 
         if (products.Count() == 0)
@@ -70,8 +68,8 @@ public class ProductsController : ControllerBase
     {
         var product = await _productService.GetProductById(id);
 
-        return product == null ? 
-            NotFound($"Product with ID {id} not found") : 
+        return product == null ?
+            NotFound($"Product with ID {id} not found") :
             Ok(product);
     }
 

@@ -1,8 +1,6 @@
-﻿using ClinchApi.Data;
-using ClinchApi.Models;
+﻿using ClinchApi.Models;
 using ClinchApi.Models.DTOs;
 using ClinchApi.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClinchApi.Controllers;
@@ -127,7 +125,7 @@ public class CategoriesController : ControllerBase
         }
         catch (Exception)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, 
+            return StatusCode(StatusCodes.Status500InternalServerError,
                 "An unexpected error occurred");
         }
     }

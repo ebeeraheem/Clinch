@@ -1,7 +1,6 @@
 ﻿using ClinchApi.Models;
 using ClinchApi.Models.DTOs;
 using ClinchApi.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClinchApi.Controllers;
@@ -29,8 +28,8 @@ public class AddressController : ControllerBase
     {
         var address = await _addressService.GetAddressById(id);
 
-        return address == null ? 
-            NotFound($"Address with ID {id} not found") : 
+        return address == null ?
+            NotFound($"Address with ID {id} not found") :
             Ok(address);
     }
 

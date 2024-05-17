@@ -63,14 +63,14 @@ public class ShoppingCartService
             Quantity = 1,
             UnitPrice = productToAdd.Price
         };
-        
+
         //Add the item to the cart
         _context.ShoppingCartItems.Add(itemToAdd);
         await _context.SaveChangesAsync();
 
-        shoppingCart.ShoppingCartItemIds.Add(itemToAdd.Id);        
+        shoppingCart.ShoppingCartItemIds.Add(itemToAdd.Id);
         await _context.SaveChangesAsync();
-        
+
         return shoppingCart;
     }
 
@@ -104,7 +104,7 @@ public class ShoppingCartService
     //NOTE: This endpoint should not be available to products that are not in the cart
     public async Task<ShoppingCart> IncreaseQuantity(int userId, int productId)
     {
-        using(var transaction = _context.Database.BeginTransaction())
+        using (var transaction = _context.Database.BeginTransaction())
         {
             //Get the shopping cart based on the userId
             var shoppingCart = _context.ShoppingCarts
@@ -206,7 +206,7 @@ public class ShoppingCartService
         {
             itemToUpdate.Quantity--;
         }
-        
+
         await _context.SaveChangesAsync();
 
         return shoppingCart;
@@ -248,7 +248,7 @@ public class ShoppingCartService
         //Remove the item and its associated ID
         shoppingCart.ShoppingCartItemIds.Remove(itemToRemove.Id);
         shoppingCart.ShoppingCartItems.Remove(itemToRemove);
-        
+
         await _context.SaveChangesAsync();
 
         return shoppingCart;

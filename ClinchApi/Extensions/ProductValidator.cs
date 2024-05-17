@@ -6,10 +6,10 @@ namespace ClinchApi.Extensions;
 
 public class ProductValidator
 {
-    public static async Task<T> ValidateProduct<T>(T product, 
+    public static async Task<T> ValidateProduct<T>(T product,
         ApplicationDbContext context,
         bool isUpdate = false,
-        int id = 0) 
+        int id = 0)
         where T : IProductBase
     {
         if (product is null)
@@ -25,7 +25,7 @@ public class ProductValidator
         //Check whether a product with the same name exist
         //Or a product with the same name that is not the one being updated
         if (await context.Products.AnyAsync(
-            p => p.Name.ToLower() == product.Name.ToLower() && 
+            p => p.Name.ToLower() == product.Name.ToLower() &&
             (isUpdate ? p.Id != id : true)))
         {
             throw new InvalidOperationException("Product with the same name already exists");
@@ -41,7 +41,7 @@ public class ProductValidator
         if (product.CategoryId != null && product.CategoryId.Distinct().Count() != product.CategoryId.Count)
         {
             throw new InvalidOperationException("Product cannot have duplicate CategoryIds");
-        }        
+        }
 
         if (product.Price <= 0)
         {

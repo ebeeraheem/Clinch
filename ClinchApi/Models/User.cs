@@ -12,7 +12,7 @@ public class User
     public string? Phone { get; set; }
     public Gender? Gender { get; set; }
     public DateOnly? DateOfBirth { get; set; }
-    
+
     // Navigation properties for addresses
     public int? UserAddressId { get; set; }
     public virtual Address? UserAddress { get; set; }
