@@ -8,7 +8,7 @@ public class Order
     public decimal TotalAmount { get; set; }
     public string? OrderNotes { get; set; }
     public OrderStatus OrderStatus { get; set; }
-    public int BillingAddressId { get; set; }
+    public int? BillingAddressId { get; set; }
     public virtual Address? BillingAddress { get; set; }
     public int ShippingAddressId { get; set; }
     public virtual Address? ShippingAddress { get; set; }
