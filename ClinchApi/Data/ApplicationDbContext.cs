@@ -20,30 +20,20 @@ public class ApplicationDbContext : DbContext
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<Payment> Payments { get; set; }
 
-    //EF Core is smart enough to create the join table on its own
-    //protected override void OnModelCreating(ModelBuilder modelBuilder)
-    //{
-    //    modelBuilder.Entity<Product>()
-    //        .HasMany(e => e.Categories)
-    //        .WithMany(e => e.Products)
-    //        .UsingEntity<ProductCategory>();
-    //}
+    
+    //Specify the decimal precision for all decimal properties to avoid silent truncating
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        var decimalProps = modelBuilder.Model
+        .GetEntityTypes()
+        .SelectMany(t => t.GetProperties())
+        .Where(p => (Nullable.GetUnderlyingType(p.ClrType) ?? 
+            p.ClrType) == typeof(decimal));
 
-    //protected override void OnModelCreating(ModelBuilder modelBuilder)
-    //{
-    //    modelBuilder.Entity<ShoppingCartItem>()
-    //        .HasKey(sci => sci.Id);
-
-    //    modelBuilder.Entity<ShoppingCartItem>()
-    //        .HasOne(sci => sci.Product)
-    //        .WithMany()
-    //        .HasForeignKey(sci => sci.ProductId);
-
-    //    modelBuilder.Entity<ShoppingCart>()
-    //        .HasMany(sc => sc.ShoppingCartItems)
-    //        .WithOne()
-    //        .HasForeignKey(sci => sci.ShoppingCartId)
-    //        .OnDelete(DeleteBehavior.Cascade); // Optional: Cascade delete if a cart is deleted
-    //}
-
+        foreach (var property in decimalProps)
+        {
+            property.SetPrecision(18);
+            property.SetScale(2);
+        }
+    }
 }
