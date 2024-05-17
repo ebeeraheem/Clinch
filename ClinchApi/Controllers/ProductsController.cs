@@ -31,6 +31,7 @@ public class ProductsController : ControllerBase
     /// <returns>A list of products</returns>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts(
         [FromQuery] decimal? maxPrice,
         [FromQuery] decimal? minPrice,
@@ -48,6 +49,11 @@ public class ProductsController : ControllerBase
             categoryId, 
             createdAfter, 
             createdBefore);
+
+        if (products.Count() == 0)
+        {
+            return NotFound();
+        }
 
         return Ok(products);
     }
@@ -113,7 +119,6 @@ public class ProductsController : ControllerBase
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Update(int id, [FromBody] ProductUpdateDTO productUpdateDTO)
     {
