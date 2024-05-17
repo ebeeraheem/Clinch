@@ -72,7 +72,7 @@ public static class DbInitializer
 		{
             var products = new Product[]
             {
-                new Product()
+                new()
             {
                 Name = "Vivo Z10",
                 Description = "A vivo phone",
@@ -83,7 +83,7 @@ public static class DbInitializer
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
             },
-                new Product()
+                new()
             {
                 Name = "Samsung Galaxy S10+",
                 Description = "A samsung galaxy",
@@ -94,7 +94,7 @@ public static class DbInitializer
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
             },
-                new Product()
+                new()
             {
                 Name = "Phillips Iron",
                 Description = "Iron your clothes",
@@ -105,7 +105,7 @@ public static class DbInitializer
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
             },
-                new Product()
+                new()
             {
                 Name = "Classic Rolex",
                 Description = "Tell time easily",
@@ -116,7 +116,7 @@ public static class DbInitializer
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
             },
-                new Product()
+                new()
             {
                 Name = "RM Jersey",
                 Description = "High quality jersey",
@@ -127,7 +127,7 @@ public static class DbInitializer
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
             },
-                new Product()
+                new()
             {
                 Name = "Lenovo Predator",
                 Description = "A gaming laptop",
@@ -138,7 +138,7 @@ public static class DbInitializer
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
             },
-                new Product()
+                new()
             {
                 Name = "BUA Rice",
                 Description = "All natural rice",
@@ -149,7 +149,7 @@ public static class DbInitializer
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
             },
-                new Product()
+                new()
             {
                 Name = "SEGA Game controller",
                 Description = "Game controller",
@@ -160,7 +160,7 @@ public static class DbInitializer
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
             },
-                new Product()
+                new()
             {
                 Name = "HP Yoga",
                 Description = "Slim laptop",
@@ -171,7 +171,7 @@ public static class DbInitializer
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
             },
-                new Product()
+                new()
                 {
                     Name = "A4 Paper",
                     Description = "Save the jungle",
