@@ -56,14 +56,18 @@ public class ProductService
             .ValidateProduct(productUpdateDTO, _context, true, id);
 
         //Get the product to update by its ID
-        var productToUpdate = await _context.Products.Include(p => p.Categories).SingleOrDefaultAsync(p => p.Id == id);
+        var productToUpdate = await _context.Products
+            .Include(p => p.Categories)
+            .SingleOrDefaultAsync(p => p.Id == id);
+
         if (productToUpdate is null)
         {
             throw new InvalidOperationException($"Product with id {id} not found");
         }
 
         //Convert the product update DTO to Product
-        var product = await validProductDTO.UpdateToProduct(_context, productToUpdate);
+        var product = await validProductDTO
+            .UpdateToProduct(_context, productToUpdate);
         
         _context.Entry(productToUpdate).CurrentValues.SetValues(product);
         await _context.SaveChangesAsync();

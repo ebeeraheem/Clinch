@@ -52,7 +52,7 @@ public static class ProductConverter
             Description = productUpdateDTO.Description,
             Price = productUpdateDTO.Price,
             Quantity = productUpdateDTO.Quantity,
-            CategoryId = productUpdateDTO.CategoryId,
+            CategoryId = productUpdateDTO.CategoryId!,
             //Categories, if any, will be added below,
             ImageUrl = productUpdateDTO.ImageUrl,
             CreatedAt = productToUpdate.CreatedAt, //This remains the same
@@ -60,8 +60,8 @@ public static class ProductConverter
         };
 
         var categoriesToRemove = productToUpdate.Categories
-            .Select(c => c.Id).Except(product.CategoryId).ToList();
-        var categoriesToAdd = product.CategoryId.Except(productToUpdate.Categories.Select(c => c.Id)).ToList();
+            .Select(c => c.Id).Except(product.CategoryId!).ToList();
+        var categoriesToAdd = product.CategoryId!.Except(productToUpdate.Categories.Select(c => c.Id)).ToList();
 
         //Remove categories
         foreach (var categoryIdToRemove in categoriesToRemove)
@@ -82,7 +82,7 @@ public static class ProductConverter
                 productToUpdate.Categories.Add(categoryToAdd);
             }
         }
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         return product;
     }

@@ -18,8 +18,8 @@ public class Product : IProductBase
     [Range(1, int.MaxValue, ErrorMessage = "Quantity must be greater than zero.")]
     public int Quantity { get; set; }
 
-    public List<int>? CategoryId { get; set; }
-    public virtual List<Category>? Categories { get; set; }
+    public List<int> CategoryId { get; set; } = new();
+    public virtual List<Category> Categories { get; set; } = new();
     public Uri? ImageUrl { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime LastUpdatedAt { get; set; }

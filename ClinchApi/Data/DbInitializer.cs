@@ -46,6 +46,7 @@ public static class DbInitializer
 
 		if (!context.Categories.Any())
 		{
+            var uncategorized = new Category { Name = "Uncategorized" };
             var phonesCategory = new Category { Name = "Phones" };
             var laptopsCategory = new Category { Name = "Laptops" };
             var gadgetsCategory = new Category { Name = "Gadgets" };
@@ -55,6 +56,7 @@ public static class DbInitializer
             var electronicsCategory = new Category { Name = "Electronics" };
 
             await context.Categories.AddRangeAsync(
+                uncategorized,
                 phonesCategory, 
                 laptopsCategory,
                 gadgetsCategory,
@@ -76,7 +78,7 @@ public static class DbInitializer
                 Description = "A vivo phone",
                 Price = 13500,
                 Quantity = 15,
-                CategoryId = new List<int> { 3, 1 },
+                CategoryId = new List<int> { 4, 2 },
                 ImageUrl = new Uri("https://your-image-url.com/product1.jpg"),
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
@@ -87,7 +89,7 @@ public static class DbInitializer
                 Description = "A samsung galaxy",
                 Price = 155000,
                 Quantity = 4,
-                CategoryId = new List<int> { 3, 1 },
+                CategoryId = new List<int> { 4, 2 },
                 ImageUrl = new Uri("https://your-image-url.com/product2.jpg"),
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
@@ -98,7 +100,7 @@ public static class DbInitializer
                 Description = "Iron your clothes",
                 Price = 23000,
                 Quantity = 8,
-                CategoryId = new List<int> { 7 },
+                CategoryId = new List<int> { 8 },
                 ImageUrl = new Uri("https://your-image-url.com/product3.jpg"),
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
@@ -109,7 +111,7 @@ public static class DbInitializer
                 Description = "Tell time easily",
                 Price = 1350000,
                 Quantity = 3,
-                CategoryId = new List<int> { 5, 6 },
+                CategoryId = new List<int> { 6, 7 },
                 ImageUrl = new Uri("https://your-image-url.com/product4.jpg"),
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
@@ -120,7 +122,7 @@ public static class DbInitializer
                 Description = "High quality jersey",
                 Price = 7800,
                 Quantity = 35,
-                CategoryId = new List<int> { 5 },
+                CategoryId = new List<int> { 6 },
                 ImageUrl = new Uri("https://your-image-url.com/product5.jpg"),
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
@@ -131,7 +133,7 @@ public static class DbInitializer
                 Description = "A gaming laptop",
                 Price = 260000,
                 Quantity = 6,
-                CategoryId = new List<int> { 2, 3 },
+                CategoryId = new List<int> { 3, 4 },
                 ImageUrl = new Uri("https://your-image-url.com/product6.jpg"),
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
@@ -142,7 +144,7 @@ public static class DbInitializer
                 Description = "All natural rice",
                 Price = 93500,
                 Quantity = 100,
-                CategoryId = new List<int> { 4 },
+                CategoryId = new List<int> { 5 },
                 ImageUrl = new Uri("https://your-image-url.com/product7.jpg"),
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
@@ -153,7 +155,7 @@ public static class DbInitializer
                 Description = "Game controller",
                 Price = 2500,
                 Quantity = 20,
-                CategoryId = new List<int> { 3 },
+                CategoryId = new List<int> { 4 },
                 ImageUrl = new Uri("https://your-image-url.com/product8.jpg"),
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
@@ -164,22 +166,40 @@ public static class DbInitializer
                 Description = "Slim laptop",
                 Price = 240000,
                 Quantity = 8,
-                CategoryId = new List<int> { 3, 2 },
+                CategoryId = new List<int> { 4, 3 },
                 ImageUrl = new Uri("https://your-image-url.com/product9.jpg"),
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow
-            }
-        };
+            },
+                new Product()
+                {
+                    Name = "A4 Paper",
+                    Description = "Save the jungle",
+                    Price = 3500,
+                    Quantity = 40,
+                    CategoryId = new List<int>{},
+                    ImageUrl = new Uri("https://your-image-url.com/product19.jpg"),
+                    CreatedAt = DateTime.UtcNow,
+                    LastUpdatedAt = DateTime.UtcNow
+                }
+            };
 
             //For each of the products, fetch the respective categories from the db
             //and add it to the product
             foreach (var product in products)
             {
                 product.Categories = new();
+
+                //If product does not belong to any category, add it to uncategorized
+                if (!product.CategoryId.Any())
+                {
+                    product.CategoryId.Add(1);
+                }
+
                 foreach (var id in product.CategoryId)
                 {
                     var category = context.Categories.Find(id);
-                    product.Categories.Add(category);
+                    product.Categories.Add(category!);
                 }
             }
 

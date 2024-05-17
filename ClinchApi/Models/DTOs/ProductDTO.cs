@@ -15,6 +15,6 @@ public class ProductDTO : IProductBase
     [Range(1, int.MaxValue, ErrorMessage = "Quantity must be greater than zero.")]
     public int Quantity { get; set; }
 
-    public List<int>? CategoryId { get; set; }
+    public List<int> CategoryId { get; set; } = new();
     public Uri? ImageUrl { get; set; }
 }

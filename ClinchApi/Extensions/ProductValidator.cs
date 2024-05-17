@@ -31,6 +31,12 @@ public class ProductValidator
             throw new InvalidOperationException("Product with the same name already exists");
         }
 
+        //If product does not belong to any category, add it to uncategorized
+        if (!product.CategoryId.Any())
+        {
+            product.CategoryId.Add(1);
+        }
+
         //Prevent adding duplicate category IDs
         if (product.CategoryId != null && product.CategoryId.Distinct().Count() != product.CategoryId.Count)
         {
