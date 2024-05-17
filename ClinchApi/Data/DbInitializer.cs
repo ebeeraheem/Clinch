@@ -191,7 +191,7 @@ public static class DbInitializer
                 product.Categories = [];
 
                 //If product does not belong to any category, add it to uncategorized
-                if (!product.CategoryId.Any())
+                if (product.CategoryId.Count == 0)
                 {
                     product.CategoryId.Add(1);
                 }
