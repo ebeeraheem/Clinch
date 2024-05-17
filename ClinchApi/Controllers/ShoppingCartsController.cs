@@ -44,6 +44,10 @@ public class ShoppingCartsController : ControllerBase
         {
             return NotFound(ex.Message);
         }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
         catch (Exception)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
