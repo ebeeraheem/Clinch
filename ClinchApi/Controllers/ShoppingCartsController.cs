@@ -73,7 +73,7 @@ public class ShoppingCartsController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
-            return NotFound(ex.Message);
+            return BadRequest(ex.Message);
         }
         catch (Exception)
         {
@@ -115,10 +115,11 @@ public class ShoppingCartsController : ControllerBase
     {
         try
         {
-            var updatedCart = await _cartService
-                .RemoveFromCart(userId, productId);
-
-            return updatedCart;
+            return await _cartService.RemoveFromCart(userId, productId);
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message);
         }
         catch (Exception)
         {

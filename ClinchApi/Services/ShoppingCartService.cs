@@ -215,10 +215,29 @@ public class ShoppingCartService
             .Include(c => c.ShoppingCartItems)
             .SingleOrDefault(c => c.UserId == userId);
 
+        if (shoppingCart is null)
+        {
+            //Create a new cart if it doesn't exist
+            shoppingCart = new()
+            {
+                UserId = userId,
+                ShoppingCartItemIds = new(),
+                ShoppingCartItems = new(),
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.ShoppingCarts.Add(shoppingCart);
+            await _context.SaveChangesAsync();
+        }
+
         //Get the item to remove from the shopping cart
-        //NOTE: This will NEVER be null
         var itemToRemove = shoppingCart.ShoppingCartItems
             .FirstOrDefault(item => item.ProductId == productId);
+
+        if (itemToRemove is null)
+        {
+            throw new ArgumentException("Product does not exist in the cart");
+        }
 
         //Remove the item and its associated ID
         shoppingCart.ShoppingCartItemIds.Remove(itemToRemove.Id);
