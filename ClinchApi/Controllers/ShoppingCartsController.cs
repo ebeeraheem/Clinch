@@ -67,6 +67,10 @@ public class ShoppingCartsController : ControllerBase
         {
             return await _cartService.IncreaseQuantity(userId, productId);
         }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message);
+        }
         catch (InvalidOperationException ex)
         {
             return NotFound(ex.Message);

@@ -115,6 +115,11 @@ public class ShoppingCartService
             var itemToUpdate = shoppingCart.ShoppingCartItems
                 .FirstOrDefault(item => item.ProductId == productId);
 
+            if (itemToUpdate is null)
+            {
+                throw new ArgumentException("Product does not exist in the cart");
+            }
+
             //Check the quantity of the product available
             var product = await _context.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
