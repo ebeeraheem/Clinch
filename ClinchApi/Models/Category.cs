@@ -6,7 +6,7 @@ namespace ClinchApi.Models;
 public class Category : ICategoryBase
 {
     public int Id { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [JsonIgnore]
     public List<Product> Products { get; set; } = new List<Product>();

@@ -6,7 +6,7 @@ public class Payment
     public PaymentMethod PaymentMethod { get; set; }
     public PaymentStatus PaymentStatus { get; set; }
     public decimal TotalAmount { get; set; }
-    public string TransactionId { get; set; }
+    public string TransactionId { get; set; } = string.Empty;
 }
 public enum PaymentMethod
 {
