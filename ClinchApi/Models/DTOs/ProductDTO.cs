@@ -6,7 +6,7 @@ namespace ClinchApi.Models.DTOs;
 public class ProductDTO : IProductBase
 {
     [Required]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
 
     [Range(1, double.MaxValue, ErrorMessage = "Price must be greater than zero.")]
