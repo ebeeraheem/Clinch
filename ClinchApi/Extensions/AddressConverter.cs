@@ -13,6 +13,7 @@ public static class AddressConverter
             StreetAddress = addressDTO.StreetAddress,
             City = addressDTO.City,
             State = addressDTO.State,
+            PostalCode = addressDTO.PostalCode,
             Country = addressDTO.Country,
             IsBillingAddress = addressDTO.IsBillingAddress,
             IsShippingAddress = addressDTO.IsShippingAddress
