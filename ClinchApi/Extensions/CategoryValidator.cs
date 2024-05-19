@@ -15,7 +15,7 @@ public class CategoryValidator
     {
         if (string.IsNullOrWhiteSpace(category.Name))
         {
-            throw new ArgumentException("Name cannot be null or empty", nameof(category.Name));
+            throw new ArgumentException("Name cannot be null or empty");
         }
 
         if (await context.Categories.AnyAsync(
