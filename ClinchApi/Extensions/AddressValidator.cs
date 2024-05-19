@@ -14,22 +14,22 @@ public static class AddressValidator
 
         if (string.IsNullOrWhiteSpace(address.StreetAddress))
         {
-            throw new ArgumentException("Street address is required", nameof(address.StreetAddress));
+            throw new ArgumentException("Street address is required");
         }
 
         if (string.IsNullOrWhiteSpace(address.City))
         {
-            throw new ArgumentException("City is required", nameof(address.City));
+            throw new ArgumentException("City is required");
         }
 
         if (string.IsNullOrWhiteSpace(address.State))
         {
-            throw new ArgumentException("State is required", nameof(address.State));
+            throw new ArgumentException("State is required");
         }
 
         if (string.IsNullOrWhiteSpace(address.Country))
         {
-            throw new ArgumentException("Country is required", nameof(address.Country));
+            throw new ArgumentException("Country is required");
         }
 
         return address;
