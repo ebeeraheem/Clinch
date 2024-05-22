@@ -23,14 +23,9 @@ public class User
     public int? ShippingAddressId { get; set; }
     public virtual Address? ShippingAddress { get; set; }
 
-    public UserRole UserRole { get; set; }
     public virtual ICollection<Order>? Orders { get; set; }
 }
-public enum UserRole
-{
-    Customer,
-    Admin
-}
+
 public enum Gender
 {
     Male,
