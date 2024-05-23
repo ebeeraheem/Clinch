@@ -26,6 +26,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     //Specify the decimal precision for all decimal properties to avoid silent truncating
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         var decimalProps = modelBuilder.Model
         .GetEntityTypes()
         .SelectMany(t => t.GetProperties())

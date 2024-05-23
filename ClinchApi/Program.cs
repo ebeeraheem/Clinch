@@ -49,6 +49,9 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+// Seed the database before running the app
+app.CreateDb();
+
 app.MapIdentityApi<ApplicationUser>();
 
 // Configure the HTTP request pipeline.
@@ -63,8 +66,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-// Seed the database before running the app
-app.CreateDb();
 
 app.Run();

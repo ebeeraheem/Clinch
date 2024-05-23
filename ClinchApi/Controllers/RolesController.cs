@@ -101,12 +101,12 @@ public class RolesController : ControllerBase
     [HttpPost("assign")]
     public async Task<IActionResult> AssignRoleToUser([FromBody] AssignRoleModel model)
     {
-        if (string.IsNullOrWhiteSpace(model.UserGuid) || string.IsNullOrWhiteSpace(model.RoleName))
+        if (string.IsNullOrWhiteSpace(model.UserId) || string.IsNullOrWhiteSpace(model.RoleName))
         {
             return BadRequest("User ID and role name cannot be empty.");
         }
 
-        var result = await _roleService.AssignRoleToUserAsync(model.UserGuid, model.RoleName);
+        var result = await _roleService.AssignRoleToUserAsync(model.UserId, model.RoleName);
         if (result)
         {
             return Ok(new { message = "Role assigned to user successfully." });
@@ -117,12 +117,12 @@ public class RolesController : ControllerBase
     [HttpPost("unassign")]
     public async Task<IActionResult> UnassignRoleFromUser([FromBody] AssignRoleModel model)
     {
-        if (string.IsNullOrWhiteSpace(model.UserGuid) || string.IsNullOrWhiteSpace(model.RoleName))
+        if (string.IsNullOrWhiteSpace(model.UserId) || string.IsNullOrWhiteSpace(model.RoleName))
         {
             return BadRequest("User ID and role name cannot be empty.");
         }
 
-        var result = await _roleService.UnassignRoleFromUserAsync(model.UserGuid, model.RoleName);
+        var result = await _roleService.UnassignRoleFromUserAsync(model.UserId, model.RoleName);
         if (result)
         {
             return Ok(new { message = "Role unassigned from user successfully." });
