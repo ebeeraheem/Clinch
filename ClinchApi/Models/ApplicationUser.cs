@@ -4,7 +4,7 @@ namespace ClinchApi.Models;
 
 public class ApplicationUser : IdentityUser<int>
 {
-    public Guid UserGuid { get; set; }
+    public Guid UserGuid { get; set; } = Guid.NewGuid();
     public string FirstName { get; set; } = string.Empty;
     public string? MiddleName { get; set; }
     public string LastName { get; set; } = string.Empty;
