@@ -1,11 +1,13 @@
 ﻿using ClinchApi.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ClinchApi.Data;
 
 public static class DbInitializer
 {
-    public static async void Initialize(ApplicationDbContext context)
+    public static async Task Initialize(ApplicationDbContext context, IServiceProvider serviceProvider)
     {
+            // Add address if no address is found in the db
         if (!context.Addresses.Any())
         {
             var rZaki = new Address()
@@ -42,6 +44,7 @@ public static class DbInitializer
             context.Addresses.AddRange(rZaki, dorayi, abuja);
         }
 
+            // Add categories if no category is found in the db
         if (!context.Categories.Any())
         {
             var uncategorized = new Category { Name = "Uncategorized" };
@@ -66,6 +69,7 @@ public static class DbInitializer
             context.SaveChanges();
         }
 
+            // Add products if no product is found in the db
         if (!context.Products.Any())
         {
             var products = new Product[]
@@ -203,6 +207,50 @@ public static class DbInitializer
 
             await context.Products.AddRangeAsync(products);
             context.SaveChanges();
+        }
+
+        // 
+        using (var scope = serviceProvider.CreateScope())
+        {
+            var userManager = scope.ServiceProvider
+                .GetRequiredService<UserManager<ApplicationUser>>();
+
+            var roleManager = scope.ServiceProvider
+                .GetRequiredService<RoleManager<IdentityRole<int>>>();
+
+            // Seed roles
+            string[] roleNames = { "Admin", "Store Owner", "Store Manager", "Customer" };
+            foreach (var roleName in roleNames)
+            {
+                if (!await roleManager.RoleExistsAsync(roleName))
+                {
+                    await roleManager.CreateAsync(new IdentityRole<int>(roleName));
+                }
+            }
+
+            // Seed default admin user
+            var adminUserEmail = "admin@example.com";
+            var adminUser = await userManager.FindByEmailAsync(adminUserEmail);
+            if (adminUser is null)
+            {
+                var user = new ApplicationUser
+                {
+                    UserGuid = Guid.NewGuid(),
+                    UserName = adminUserEmail,
+                    Email = adminUserEmail,
+                    FirstName = "Ibrahim",
+                    LastName = "Suleiman",
+                    PhoneNumber = "08143660104",
+                    Gender = Gender.Male,
+                    DateOfBirth = new DateOnly(1999, 1, 4),
+                    UserAddressId = 1
+                };
+                var result = await userManager.CreateAsync(user, "Admin@123");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "Admin");
+                }
+            }
         }
     }
 }
