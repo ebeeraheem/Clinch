@@ -1,7 +1,10 @@
 using ClinchApi.Data;
 using ClinchApi.Extensions;
+using ClinchApi.Models;
 using ClinchApi.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //// For testing environment (using in-memory database)
 //builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //    options.UseInMemoryDatabase("EcommerceDb"));
+
+builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
+    .AddRoles<IdentityRole<int>>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddScoped<AddressService>();
 builder.Services.AddScoped<CategoryService>();
