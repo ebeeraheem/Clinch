@@ -2,7 +2,7 @@
 
 namespace ClinchApi.Models;
 
-public class ApplicationUser : IdentityUser
+public class ApplicationUser : IdentityUser<int>
 {
     public Guid UserGuid { get; set; }
     public string FirstName { get; set; } = string.Empty;
