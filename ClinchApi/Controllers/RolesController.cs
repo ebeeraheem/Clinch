@@ -121,7 +121,7 @@ public class RolesController : ControllerBase
             var role = await _roleService.CreateRoleAsync(roleName);
 
             return role is not null ?
-                CreatedAtAction(nameof(GetRoleById), new { id = role.Id }, role) : 
+                CreatedAtAction(nameof(GetRoleById), new { roleId = role.Id.ToString() }, role) : 
                 BadRequest("Role creation failed");
         }
         catch (ArgumentException ex)
