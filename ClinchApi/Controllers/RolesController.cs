@@ -46,7 +46,7 @@ public class RolesController : ControllerBase
     /// </summary>
     /// <param name="roleId">ID of the role to get</param>
     /// <returns>A role</returns>
-    [HttpGet]
+    [HttpGet("{roleId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
