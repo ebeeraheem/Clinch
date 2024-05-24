@@ -24,6 +24,13 @@ public class RoleService
         return roles;
     }
 
+    //Get role by ID
+    public async Task<IdentityRole<int>> GetRoleById(string roleId)
+    {
+        return await _roleManager.FindByIdAsync(roleId) ?? 
+            throw new InvalidOperationException($"Role with ID {roleId} not found");
+    }
+
     //Get the roles of a user
     public async Task<List<string>> GetUserRolesAsync(string userId)
     {
