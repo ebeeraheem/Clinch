@@ -37,7 +37,7 @@ public class RolesController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
         }
     }
 
@@ -95,7 +95,7 @@ public class RolesController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
         }
     }
 
