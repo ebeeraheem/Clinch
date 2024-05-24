@@ -35,7 +35,7 @@ public class RoleService
     }
 
     //Create a new role
-    public async Task<bool> CreateRoleAsync(string roleName)
+    public async Task<IdentityResult> CreateRoleAsync(string roleName)
     {
         var roleExists = await _roleManager.RoleExistsAsync(roleName);
 
@@ -47,7 +47,7 @@ public class RoleService
         var result = await _roleManager.CreateAsync(
                 new IdentityRole<int>(roleName));
 
-        return result.Succeeded;
+        return result;
     }
 
     //Update a role

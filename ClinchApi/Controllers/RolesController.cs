@@ -80,6 +80,7 @@ public class RolesController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateRole([FromBody] string roleName)
     {
@@ -90,13 +91,13 @@ public class RolesController : ControllerBase
 
         try
         {
-            var roleCreated = await _roleService.CreateRoleAsync(roleName);
+            var result = await _roleService.CreateRoleAsync(roleName);
 
-            return roleCreated ? Ok() : BadRequest("Role creation failed");
+            return result.Succeeded ? Ok() : BadRequest("Role creation failed");
         }
         catch (ArgumentException ex)
         {
-            return BadRequest(ex.Message);
+            return Conflict(ex.Message);
         }
         catch (Exception)
         {
