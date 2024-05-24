@@ -22,12 +22,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<Payment> Payments { get; set; }
 
-
-    //Specify the decimal precision for all decimal properties to avoid silent truncating
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
+        // Specify the decimal precision for all decimal properties to avoid silent truncating
         var decimalProps = modelBuilder.Model
         .GetEntityTypes()
         .SelectMany(t => t.GetProperties())
@@ -39,5 +38,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             property.SetPrecision(18);
             property.SetScale(2);
         }
+
+        // Configuring the Gender enum to be stored as string
+        modelBuilder.Entity<ApplicationUser>()
+            .Property(e => e.Gender)
+            .HasConversion<string>();
     }
 }
