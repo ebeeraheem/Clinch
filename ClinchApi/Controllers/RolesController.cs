@@ -41,17 +41,30 @@ public class RolesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Get the roles of a user
+    /// </summary>
+    /// <param name="userId">Id of the user whose roles will be returned</param>
+    /// <returns>A list of string</returns>
     [HttpGet("user/{userId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetUserRoles(string userId)
     {
         try
         {
             var roles = await _roleService.GetUserRolesAsync(userId);
-            if (roles == null || !roles.Any())
+            if (roles == null || roles.Count == 0)
             {
                 return NotFound("No roles found for this user");
             }
             return Ok(roles);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
         }
         catch (Exception ex)
         {
