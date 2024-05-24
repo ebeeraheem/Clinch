@@ -105,7 +105,7 @@ public class RolesController : ControllerBase
     /// <param name="roleName">Name of the role to be created</param>
     /// <returns>Ok result</returns>
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -118,10 +118,10 @@ public class RolesController : ControllerBase
 
         try
         {
-            var result = await _roleService.CreateRoleAsync(roleName);
+            var role = await _roleService.CreateRoleAsync(roleName);
 
-            return result.Succeeded ? 
-                Ok() : 
+            return role is not null ?
+                CreatedAtAction(nameof(GetRoleById), new { id = role.Id }, role) : 
                 BadRequest("Role creation failed");
         }
         catch (ArgumentException ex)

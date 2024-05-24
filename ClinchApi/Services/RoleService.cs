@@ -52,7 +52,8 @@ public class RoleService
         }
 
         var role = new IdentityRole<int>(roleName);
-        var result = await _roleManager.CreateAsync(role);
+        
+        await _roleManager.CreateAsync(role);
 
         return role;
     }
