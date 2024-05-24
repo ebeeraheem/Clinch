@@ -61,12 +61,22 @@ public class RoleService
     //Update a role
     public async Task<bool> UpdateRoleAsync(string roleId, string newRoleName)
     {
+        // Check if a role with the new role name already exists
+        var existingRole = await _roleManager.FindByNameAsync(newRoleName);
+        if (existingRole != null && existingRole.Id.ToString() != roleId)
+        {
+            throw new InvalidOperationException($"A role with the name '{newRoleName}' already exists.");
+        }
+
         var role = await _roleManager.FindByIdAsync(roleId);
         if (role is not null)
         {
             role.Name = newRoleName;
             var result = await _roleManager.UpdateAsync(role);
-            return result.Succeeded;
+
+            return result.Succeeded ?
+                true :
+                throw new InvalidOperationException($"Failed to update role {roleId}");
         }
         return false;
     }

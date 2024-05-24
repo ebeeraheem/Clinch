@@ -35,7 +35,7 @@ public class RolesController : ControllerBase
             }
             return Ok(roles);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
         }
@@ -93,7 +93,7 @@ public class RolesController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
         }
@@ -134,19 +134,41 @@ public class RolesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Updates the name of a role
+    /// </summary>
+    /// <param name="roleId">ID of the role to be updated</param>
+    /// <param name="newRoleName">The new role name</param>
+    /// <returns>No content</returns>
     [HttpPut("{roleId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateRole(string roleId, [FromBody] string newRoleName)
     {
-        if (string.IsNullOrEmpty(roleId) || string.IsNullOrEmpty(newRoleName))
+        if (string.IsNullOrWhiteSpace(newRoleName))
         {
-            return BadRequest("ID and new role name cannot be empty.");
+            return BadRequest("New role name cannot be empty.");
         }
 
-        if (await _roleService.UpdateRoleAsync(roleId, newRoleName))
+        try
         {
-            return Ok(new { message = "Role updated successfully." });
+            if (await _roleService.UpdateRoleAsync(roleId, newRoleName))
+            {
+                return NoContent();
+            }
+            return NotFound($"Role with ID {roleId} not found.");
         }
-        return NotFound("Role not found.");
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
+        }
     }
 
     [HttpDelete("{roleId}")]
