@@ -41,6 +41,25 @@ public class RolesController : ControllerBase
         }
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetRoleById(string roleId)
+    {
+        try
+        {
+            var role = await _roleService.GetRoleById(roleId);
+
+            return Ok(role);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
+        }
+    }
+
     /// <summary>
     /// Get the roles of a user
     /// </summary>
