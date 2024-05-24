@@ -197,7 +197,16 @@ public class RolesController : ControllerBase
         }
     }
         
+    /// <summary>
+    /// Assigns a role to a user
+    /// </summary>
+    /// <param name="model">A model containing the user id and the role name</param>
+    /// <returns>Ok object result</returns>
     [HttpPost("assign")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> AssignRoleToUser([FromBody] AssignRoleModel model)
     {
         if (string.IsNullOrWhiteSpace(model.UserId) || string.IsNullOrWhiteSpace(model.RoleName))
