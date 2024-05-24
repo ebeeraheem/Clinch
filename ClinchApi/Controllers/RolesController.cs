@@ -16,7 +16,14 @@ public class RolesController : ControllerBase
         _roleService = roleService;
     }
 
+    /// <summary>
+    /// Gets all the roles as a list of string
+    /// </summary>
+    /// <returns>A list of string</returns>
     [HttpGet("all")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllRoles()
     {
         try

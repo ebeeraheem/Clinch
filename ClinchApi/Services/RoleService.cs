@@ -18,7 +18,9 @@ public class RoleService
     //Get all roles
     public async Task<List<string?>> GetAllRolesAsync()
     {
-        var roles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+        var roles = await _roleManager.Roles
+            .Select(r => r.Name).ToListAsync();
+
         return roles;
     }
 
