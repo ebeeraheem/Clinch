@@ -237,7 +237,16 @@ public class RolesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Unassigns a role from a user
+    /// </summary>
+    /// <param name="model">A model containing the user id and the role name</param>
+    /// <returns>No content</returns>
     [HttpPost("unassign")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UnassignRoleFromUser([FromBody] AssignRoleModel model)
     {
         if (string.IsNullOrWhiteSpace(model.UserId) || string.IsNullOrWhiteSpace(model.RoleName))
@@ -245,11 +254,26 @@ public class RolesController : ControllerBase
             return BadRequest("User ID and role name cannot be empty.");
         }
 
-        var result = await _roleService.UnassignRoleFromUserAsync(model.UserId, model.RoleName);
-        if (result)
+        try
         {
-            return Ok(new { message = "Role unassigned from user successfully." });
+            var result = await _roleService.UnassignRoleFromUserAsync(model.UserId, model.RoleName);
+            if (result)
+            {
+                return NoContent();
+            }
+            return BadRequest("Error unassigning role from user.");
         }
-        return BadRequest("Error unassigning role from user. The user might not have the role.");
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
+        }
     }
 }

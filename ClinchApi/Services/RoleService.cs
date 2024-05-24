@@ -118,15 +118,17 @@ public class RoleService
     //Unassign role from a user
     public async Task<bool> UnassignRoleFromUserAsync(string userId, string roleName)
     {
-        var user = await _userManager.FindByIdAsync(userId);
-        if (user is null)
+        var user = await _userManager.FindByIdAsync(userId) ??
+            throw new InvalidOperationException($"User with ID {userId} not found");
+
+        if (!await _roleManager.RoleExistsAsync(roleName))
         {
-            return false;
+            throw new InvalidOperationException($"A role with the name '{roleName}' does not exist.");
         }
 
         if (!await _userManager.IsInRoleAsync(user, roleName))
         {
-            return false; // User does not have the role
+            throw new ArgumentException($"User does not have the role {roleName}");
         }
 
         var result = await _userManager.RemoveFromRoleAsync(user, roleName);
