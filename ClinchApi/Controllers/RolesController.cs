@@ -205,12 +205,27 @@ public class RolesController : ControllerBase
             return BadRequest("User ID and role name cannot be empty.");
         }
 
-        var result = await _roleService.AssignRoleToUserAsync(model.UserId, model.RoleName);
-        if (result)
+        try
         {
-            return Ok(new { message = "Role assigned to user successfully." });
+            var result = await _roleService.AssignRoleToUserAsync(model.UserId, model.RoleName);
+            if (result)
+            {
+                return Ok("Role assigned to user successfully.");
+            }
+            return BadRequest("Error assigning role to user.");
         }
-        return BadRequest("Error assigning role to user. The role might not exist or the user might already have the role.");
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
+        }
     }
 
     [HttpPost("unassign")]
