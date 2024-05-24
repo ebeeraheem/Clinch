@@ -20,7 +20,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //    options.UseInMemoryDatabase("EcommerceDb"));
 
-builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
+builder.Services.AddIdentityApiEndpoints<ApplicationUser>(options =>
+    {
+        options.User.RequireUniqueEmail = true;
+        options.Password.RequiredLength = 8;
+    })
     .AddRoles<IdentityRole<int>>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -52,8 +56,6 @@ var app = builder.Build();
 // Seed the database before running the app
 app.CreateDb();
 
-app.MapIdentityApi<ApplicationUser>();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -63,7 +65,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapIdentityApi<ApplicationUser>();
 
 app.MapControllers();
 
