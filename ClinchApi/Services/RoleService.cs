@@ -88,7 +88,9 @@ public class RoleService
         if (role is not null)
         {
             var result = await _roleManager.DeleteAsync(role);
-            return result.Succeeded;
+            return result.Succeeded ?
+                true :
+                throw new Exception();
         }
         return false;
     }

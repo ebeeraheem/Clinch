@@ -171,20 +171,30 @@ public class RolesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Deletes a role
+    /// </summary>
+    /// <param name="roleId">ID of the role to be deleted</param>
+    /// <returns>No content</returns>
     [HttpDelete("{roleId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteRole(string roleId)
     {
-        if (string.IsNullOrEmpty(roleId))
+        try
         {
-            return BadRequest("Role ID cannot be empty.");
+            var roleIsDeleted = await _roleService.DeleteRoleAsync(roleId);
+            if (roleIsDeleted)
+            {
+                return NoContent();
+            }
+            return NotFound($"Role with ID {roleId} not found.");
         }
-
-        var roleExists = await _roleService.DeleteRoleAsync(roleId);
-        if (roleExists)
+        catch (Exception)
         {
-            return Ok(new { message = "Role deleted successfully." });
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
         }
-        return NotFound("Role not found.");
     }
         
     [HttpPost("assign")]
