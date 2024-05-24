@@ -41,7 +41,15 @@ public class RolesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Get a role by its ID
+    /// </summary>
+    /// <param name="roleId">ID of the role to get</param>
+    /// <returns>A role</returns>
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetRoleById(string roleId)
     {
         try
@@ -112,7 +120,9 @@ public class RolesController : ControllerBase
         {
             var result = await _roleService.CreateRoleAsync(roleName);
 
-            return result.Succeeded ? Ok() : BadRequest("Role creation failed");
+            return result.Succeeded ? 
+                Ok() : 
+                BadRequest("Role creation failed");
         }
         catch (ArgumentException ex)
         {
