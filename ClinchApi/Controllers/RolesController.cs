@@ -72,7 +72,15 @@ public class RolesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Creates a new role
+    /// </summary>
+    /// <param name="roleName">Name of the role to be created</param>
+    /// <returns>Ok result</returns>
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateRole([FromBody] string roleName)
     {
         if (string.IsNullOrWhiteSpace(roleName))
@@ -80,11 +88,20 @@ public class RolesController : ControllerBase
             return BadRequest("Role name cannot be empty.");
         }
 
-        if (await _roleService.CreateRoleAsync(roleName))
+        try
         {
-            return Ok(new { message = "Role created successfully." });
+            var roleCreated = await _roleService.CreateRoleAsync(roleName);
+
+            return roleCreated ? Ok() : BadRequest("Role creation failed");
         }
-        return StatusCode(StatusCodes.Status500InternalServerError, "Error creating role.");
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
+        }
     }
 
     [HttpPut("{roleId}")]

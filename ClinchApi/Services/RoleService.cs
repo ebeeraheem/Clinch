@@ -37,12 +37,17 @@ public class RoleService
     //Create a new role
     public async Task<bool> CreateRoleAsync(string roleName)
     {
-        if (!await _roleManager.RoleExistsAsync(roleName))
+        var roleExists = await _roleManager.RoleExistsAsync(roleName);
+
+        if (roleExists)
         {
-            var result = await _roleManager.CreateAsync(new IdentityRole<int>(roleName));
-            return result.Succeeded;
+            throw new ArgumentException("Role already exists", roleName);            
         }
-        return false;
+
+        var result = await _roleManager.CreateAsync(
+                new IdentityRole<int>(roleName));
+
+        return result.Succeeded;
     }
 
     //Update a role
