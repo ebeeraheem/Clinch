@@ -21,7 +21,7 @@ public class ApplicationUser : IdentityUser<int>
     public int? ShippingAddressId { get; set; }
     public virtual Address? ShippingAddress { get; set; }
 
-    public int PaymentId { get; set; }
+    public int? PaymentId { get; set; }
     public virtual Payment? Payment { get; set; }
 
     public virtual ICollection<Order>? Orders { get; set; }
