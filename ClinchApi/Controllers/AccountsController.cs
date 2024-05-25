@@ -86,6 +86,24 @@ public class AccountsController : ControllerBase
         return NoContent();
     }
 
+    // Delete user account
+    [HttpDelete("{id}")]
+    [Authorize]
+    public async Task<IActionResult> DeleteUser(string id)
+    {
+        var result = await _userService.DeleteUserAsync(id);
+        if (result.Succeeded)
+        {
+            return NoContent();
+        }
+
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError("Error", error.Description);
+        }
+        return BadRequest(ModelState);
+    }
+
 
     //private readonly UserManager<ApplicationUser> _userManager;
     //private readonly SignInManager<ApplicationUser> _signInManager;

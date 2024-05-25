@@ -87,6 +87,19 @@ public class UserService
     }
 
     // Delete user account
+    public async Task<IdentityResult> DeleteUserAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null)
+        {
+            return IdentityResult.Failed(new IdentityError { Description = $"User with ID {userId} not found" });
+        }
+
+        // Log out the user
+        await _signInManager.SignOutAsync();
+
+        return await _userManager.DeleteAsync(user);
+    }
 
 
     //ENDPOINTS MANAGED BY IDENTITY
