@@ -7,12 +7,10 @@ namespace ClinchApi.Services;
 
 public class UserService
 {
-    private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public UserService(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+    public UserService(UserManager<ApplicationUser> userManager)
     {
-        _context = context;
         _userManager = userManager;
     }
     //Get user by id/guid
@@ -20,20 +18,26 @@ public class UserService
     // Get all users (optional parameters)
 
     // Update user details
-    public async Task UpdateProfile(string userId, UpdateUserModel user)
+    public async Task<IdentityResult> UpdateUserAsync(string userId, UpdateUserModel model)
     {
         //Find user by guid
-        var userToUpdate = await _userManager.FindByIdAsync(userId) ?? throw new ArgumentException($"User with ID {userId} not found");
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null)
+        {
+            return IdentityResult.Failed(
+                new IdentityError { Description = "User not found" });
+        }        
 
-        //userToUpdate.FirstName = user.FirstName;
-        //userToUpdate.MiddleName = user.MiddleName;
-        //userToUpdate.LastName = user.LastName;
-        //userToUpdate.Email = user.Email;
-        //userToUpdate.PhoneNumber = user.PhoneNumber;
-        //userToUpdate.Gender = user.Gender;
-        //userToUpdate.DateOfBirth = user.DateOfBirth;
+        user.FirstName = model.FirstName;
+        user.MiddleName = model.MiddleName;
+        user.LastName = model.LastName;
+        user.Email = model.Email;
+        user.UserName = model.Email;
+        user.PhoneNumber = model.PhoneNumber;
+        user.Gender = model.Gender;
+        user.DateOfBirth = model.DateOfBirth;
 
-        await _userManager.UpdateAsync(userToUpdate);
+        return await _userManager.UpdateAsync(user);
     }
 
     // Log out
