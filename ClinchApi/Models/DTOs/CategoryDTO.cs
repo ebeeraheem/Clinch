@@ -1,6 +1,6 @@
 ﻿using ClinchApi.Entities.Interfaces;
 
-namespace ClinchApi.Entities.DTOs;
+namespace ClinchApi.Models.DTOs;
 
 public class CategoryDTO : ICategoryBase
 {

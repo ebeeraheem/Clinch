@@ -1,5 +1,5 @@
 ﻿using ClinchApi.Entities;
-using ClinchApi.Entities.DTOs;
+using ClinchApi.Models.DTOs;
 
 namespace ClinchApi.Extensions;
 

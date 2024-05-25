@@ -1,4 +1,4 @@
-﻿using ClinchApi.Entities;
+﻿using ClinchApi.Models;
 using ClinchApi.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

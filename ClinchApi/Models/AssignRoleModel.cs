@@ -1,4 +1,4 @@
-﻿namespace ClinchApi.Entities;
+﻿namespace ClinchApi.Models;
 
 public class AssignRoleModel
 {

@@ -1,10 +1,12 @@
 ﻿using ClinchApi.Entities.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
-namespace ClinchApi.Entities.DTOs;
+namespace ClinchApi.Models.DTOs;
 
-public class ProductDTO : IProductBase
+public class ProductUpdateDTO : IProductBase
 {
+    public int Id { get; set; }
+
     [Required]
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }

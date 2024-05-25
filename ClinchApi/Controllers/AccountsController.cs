@@ -1,4 +1,5 @@
 ﻿using ClinchApi.Entities;
+using ClinchApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +43,7 @@ public class AccountsController : ControllerBase
         if (result.Succeeded)
         {
             // Additional logic after successful registration, e.g., sign in the user or send a confirmation email.
-            //await _signInManager.SignInAsync(user, isPersistent: false);
+            await _signInManager.SignInAsync(user, isPersistent: false);
             return Ok();
         }
 

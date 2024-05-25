@@ -1,4 +1,6 @@
-﻿namespace ClinchApi.Entities;
+﻿using ClinchApi.Entities;
+
+namespace ClinchApi.Models;
 
 public class RegisterModel
 {
@@ -9,6 +11,5 @@ public class RegisterModel
     public DateOnly? DateOfBirth { get; set; }
     public string Password { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
-    
 
 }
