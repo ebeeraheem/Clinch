@@ -1,6 +1,6 @@
 ﻿using ClinchApi.Extensions;
-using ClinchApi.Models;
-using ClinchApi.Models.DTOs;
+using ClinchApi.Entities;
+using ClinchApi.Entities.DTOs;
 using ClinchApi.Services;
 using Microsoft.AspNetCore.Mvc;
 

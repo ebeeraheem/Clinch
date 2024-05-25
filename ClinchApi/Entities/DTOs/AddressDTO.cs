@@ -1,6 +1,6 @@
-﻿using ClinchApi.Models.Interfaces;
+﻿using ClinchApi.Entities.Interfaces;
 
-namespace ClinchApi.Models.DTOs;
+namespace ClinchApi.Entities.DTOs;
 
 public class AddressDTO : IAddressBase
 {

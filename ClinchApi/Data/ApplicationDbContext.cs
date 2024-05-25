@@ -1,4 +1,4 @@
-﻿using ClinchApi.Models;
+﻿using ClinchApi.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

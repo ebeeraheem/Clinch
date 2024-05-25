@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace ClinchApi.Models;
+namespace ClinchApi.Entities;
 
 public class ApplicationUser : IdentityUser<int>
 {

@@ -1,6 +1,6 @@
-﻿using ClinchApi.Models.Interfaces;
+﻿using ClinchApi.Entities.Interfaces;
 
-namespace ClinchApi.Models;
+namespace ClinchApi.Entities;
 
 public class Address : IAddressBase
 {

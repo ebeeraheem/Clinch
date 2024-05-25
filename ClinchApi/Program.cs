@@ -1,6 +1,6 @@
 using ClinchApi.Data;
 using ClinchApi.Extensions;
-using ClinchApi.Models;
+using ClinchApi.Entities;
 using ClinchApi.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

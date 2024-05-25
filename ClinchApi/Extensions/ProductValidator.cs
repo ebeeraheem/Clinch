@@ -1,5 +1,5 @@
 ﻿using ClinchApi.Data;
-using ClinchApi.Models.Interfaces;
+using ClinchApi.Entities.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClinchApi.Extensions;

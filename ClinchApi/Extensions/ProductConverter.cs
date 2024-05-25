@@ -1,6 +1,6 @@
 ﻿using ClinchApi.Data;
-using ClinchApi.Models;
-using ClinchApi.Models.DTOs;
+using ClinchApi.Entities;
+using ClinchApi.Entities.DTOs;
 
 namespace ClinchApi.Extensions;
 

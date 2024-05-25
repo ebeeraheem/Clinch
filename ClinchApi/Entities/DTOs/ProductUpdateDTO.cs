@@ -1,7 +1,7 @@
-﻿using ClinchApi.Models.Interfaces;
+﻿using ClinchApi.Entities.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
-namespace ClinchApi.Models.DTOs;
+namespace ClinchApi.Entities.DTOs;
 
 public class ProductUpdateDTO : IProductBase
 {

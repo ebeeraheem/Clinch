@@ -1,4 +1,4 @@
-﻿namespace ClinchApi.Models.Interfaces;
+﻿namespace ClinchApi.Entities.Interfaces;
 
 public interface ICategoryBase
 {

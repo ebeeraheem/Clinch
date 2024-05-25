@@ -1,10 +1,12 @@
-﻿using ClinchApi.Models.Interfaces;
+﻿using ClinchApi.Entities.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
-namespace ClinchApi.Models.DTOs;
+namespace ClinchApi.Entities;
 
-public class ProductDTO : IProductBase
+public class Product : IProductBase
 {
+    public int Id { get; set; }
+
     [Required]
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
@@ -16,5 +18,8 @@ public class ProductDTO : IProductBase
     public int Quantity { get; set; }
 
     public List<int> CategoryId { get; set; } = new();
+    public virtual List<Category> Categories { get; set; } = new();
     public Uri? ImageUrl { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime LastUpdatedAt { get; set; }
 }

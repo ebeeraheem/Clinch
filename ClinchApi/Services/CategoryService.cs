@@ -1,7 +1,7 @@
 ﻿using ClinchApi.Data;
 using ClinchApi.Extensions;
-using ClinchApi.Models;
-using ClinchApi.Models.DTOs;
+using ClinchApi.Entities;
+using ClinchApi.Entities.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClinchApi.Services;

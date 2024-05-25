@@ -1,7 +1,7 @@
-﻿using ClinchApi.Models.Interfaces;
+﻿using ClinchApi.Entities.Interfaces;
 using System.Text.Json.Serialization;
 
-namespace ClinchApi.Models;
+namespace ClinchApi.Entities;
 
 public class Category : ICategoryBase
 {

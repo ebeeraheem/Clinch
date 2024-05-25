@@ -1,4 +1,4 @@
-﻿using ClinchApi.Models.Interfaces;
+﻿using ClinchApi.Entities.Interfaces;
 
 namespace ClinchApi.Extensions;
 

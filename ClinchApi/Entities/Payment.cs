@@ -1,4 +1,4 @@
-﻿namespace ClinchApi.Models;
+﻿namespace ClinchApi.Entities;
 
 public class Payment
 {
