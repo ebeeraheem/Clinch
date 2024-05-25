@@ -10,6 +10,7 @@ namespace ClinchApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class AccountsController : ControllerBase
 {
     private readonly UserService _userService;
@@ -21,7 +22,6 @@ public class AccountsController : ControllerBase
 
     // Get all users
     [HttpGet]
-    [Authorize]
     public IActionResult GetAllUsers()
     {
         var users = _userService.GetAllUsers();
@@ -30,7 +30,6 @@ public class AccountsController : ControllerBase
 
     // Get user by ID
     [HttpGet("{userId}")]
-    [Authorize]
     public async Task<IActionResult> GetUserById(string userId)
     {
         try
@@ -49,7 +48,6 @@ public class AccountsController : ControllerBase
     }
 
     [HttpPost("update")]
-    [Authorize]
     public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserModel model)
     {
         if (!ModelState.IsValid)
@@ -79,7 +77,6 @@ public class AccountsController : ControllerBase
 
     // Log out
     [HttpPost("logout")]
-    [Authorize]
     public async Task<IActionResult> LogOut()
     {
         await _userService.LogOutAsync();
@@ -88,7 +85,6 @@ public class AccountsController : ControllerBase
 
     // Delete user account
     [HttpDelete("{id}")]
-    [Authorize]
     public async Task<IActionResult> DeleteUser(string id)
     {
         var result = await _userService.DeleteUserAsync(id);
