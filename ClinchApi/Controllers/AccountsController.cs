@@ -77,7 +77,14 @@ public class AccountsController : ControllerBase
         return BadRequest(ModelState);
     }
 
-
+    // Log out
+    [HttpPost("logout")]
+    [Authorize]
+    public async Task<IActionResult> LogOut()
+    {
+        await _userService.LogOutAsync();
+        return NoContent();
+    }
 
 
     //private readonly UserManager<ApplicationUser> _userManager;

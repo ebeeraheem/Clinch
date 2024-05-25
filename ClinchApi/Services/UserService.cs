@@ -81,6 +81,10 @@ public class UserService
     }
 
     // Log out
+    public async Task LogOutAsync()
+    {
+        await _signInManager.SignOutAsync();
+    }
 
     // Delete user account
 
