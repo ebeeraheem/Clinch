@@ -65,7 +65,7 @@ public class UserService
         if (user is null)
         {
             return IdentityResult.Failed(
-                new IdentityError { Description = "User not found" });
+                new IdentityError { Description = $"User with ID {userId} not found" });
         }        
 
         user.FirstName = model.FirstName;

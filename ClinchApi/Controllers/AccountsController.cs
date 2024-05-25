@@ -20,16 +20,27 @@ public class AccountsController : ControllerBase
         _userService = userService;
     }
 
-    // Get all users
+    /// <summary>
+    /// Get all users
+    /// </summary>
+    /// <returns>Returns a list of all users</returns>
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult GetAllUsers()
     {
         var users = _userService.GetAllUsers();
         return Ok(users);
     }
 
-    // Get user by ID
+    /// <summary>
+    /// Return a user with the specified ID
+    /// </summary>
+    /// <param name="userId">ID of teh user to return</param>
+    /// <returns>A user</returns>
     [HttpGet("{userId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetUserById(string userId)
     {
         try
@@ -47,7 +58,16 @@ public class AccountsController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Updates a user's profile
+    /// </summary>
+    /// <param name="model">A model that contsind the updated user details</param>
+    /// <returns>No content</returns>
     [HttpPost("update")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserModel model)
     {
         if (!ModelState.IsValid)
@@ -75,16 +95,26 @@ public class AccountsController : ControllerBase
         return BadRequest(ModelState);
     }
 
-    // Log out
+    /// <summary>
+    /// Logs a user out
+    /// </summary>
+    /// <returns>No content</returns>
     [HttpPost("logout")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> LogOut()
     {
         await _userService.LogOutAsync();
         return NoContent();
     }
 
-    // Delete user account
+    /// <summary>
+    /// Deletes a user's account
+    /// </summary>
+    /// <param name="id">ID of the user whose account is to be deleted</param>
+    /// <returns>No content</returns>
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeleteUser(string id)
     {
         var result = await _userService.DeleteUserAsync(id);
