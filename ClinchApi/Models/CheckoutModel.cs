@@ -4,11 +4,8 @@ namespace ClinchApi.Models;
 
 public class CheckoutModel
 {
-    // In order to checkout, a user must have provided the following info
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
-    public Gender? Gender { get; set; }
-    public DateOnly? DateOfBirth { get; set; }
     public string PhoneNumber { get; set; } = string.Empty;
 
     public int PaymentId { get; set; }
