@@ -34,7 +34,7 @@ public class AccountsController : ControllerBase
             LastName = model.LastName,
             Gender = model.Gender,
             DateOfBirth = model.DateOfBirth,
-            UserAddressId = model.UserAddressId
+            //UserAddressId = model.UserAddressId
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);
@@ -42,7 +42,7 @@ public class AccountsController : ControllerBase
         if (result.Succeeded)
         {
             // Additional logic after successful registration, e.g., sign in the user or send a confirmation email.
-            await _signInManager.SignInAsync(user, isPersistent: false);
+            //await _signInManager.SignInAsync(user, isPersistent: false);
             return Ok();
         }
 
