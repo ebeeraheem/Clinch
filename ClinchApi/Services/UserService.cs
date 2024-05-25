@@ -34,6 +34,28 @@ public class UserService
     }
 
     // Get all users (optional parameters)
+    public List<UpdateUserModel> GetAllUsers()
+    {
+        var users = _userManager.Users.ToList();
+
+        List<UpdateUserModel> output = [];
+        foreach (var user in users)
+        {
+            var userModel = new UpdateUserModel()
+            {
+                FirstName = user.FirstName,
+                MiddleName = user.MiddleName,
+                LastName = user.LastName,
+                Gender = user.Gender,
+                DateOfBirth = user.DateOfBirth,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber
+            };
+
+            output.Add(userModel);
+        }
+        return output;
+    }
 
     // Update user details
     public async Task<IdentityResult> UpdateUserAsync(string userId, UpdateUserModel model)

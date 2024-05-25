@@ -19,6 +19,15 @@ public class AccountsController : ControllerBase
         _userService = userService;
     }
 
+    // Get all users
+    [HttpGet]
+    [Authorize]
+    public IActionResult GetAllUsers()
+    {
+        var users = _userService.GetAllUsers();
+        return Ok(users);
+    }
+
     // Get user by ID
     [HttpGet("{userId}")]
     [Authorize]
