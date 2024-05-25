@@ -19,6 +19,26 @@ public class AccountsController : ControllerBase
         _userService = userService;
     }
 
+    // Get user by ID
+    [HttpGet("{userId}")]
+    [Authorize]
+    public async Task<IActionResult> GetUserById(string userId)
+    {
+        try
+        {
+            var userModel = await _userService.GetUserByIdAsync(userId);
+            return Ok(userModel);
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured");
+        }
+    }
+
     [HttpPost("update")]
     [Authorize]
     public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserModel model)

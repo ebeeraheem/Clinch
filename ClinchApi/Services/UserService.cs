@@ -8,12 +8,30 @@ namespace ClinchApi.Services;
 public class UserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
 
-    public UserService(UserManager<ApplicationUser> userManager)
+    public UserService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
     {
         _userManager = userManager;
+        _signInManager = signInManager;
     }
-    //Get user by id/guid
+    //Get user by id
+    public async Task<UpdateUserModel> GetUserByIdAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId) ?? 
+            throw new ArgumentException($"User with ID {userId} not found.");
+
+        return new UpdateUserModel
+        {
+            FirstName = user.FirstName,
+            MiddleName = user.MiddleName,
+            LastName = user.LastName,
+            Gender = user.Gender,
+            DateOfBirth = user.DateOfBirth,
+            Email = user.Email,
+            PhoneNumber = user.PhoneNumber
+        };
+    }
 
     // Get all users (optional parameters)
 
