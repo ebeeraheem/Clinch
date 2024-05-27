@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ClinchApi.Controllers;
 
@@ -76,8 +77,7 @@ public class AccountsController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var userId = User.FindFirst(System.Security.Claims
-            .ClaimTypes.NameIdentifier)?.Value;
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userId is null)
         {
             return Unauthorized();
