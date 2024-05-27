@@ -80,7 +80,7 @@ public class ProductsController : ControllerBase
     /// <param name="newProductDTO">Details of the new product</param>
     /// <returns>A 'Location' response header with the URL of the newly created product</returns>
     [HttpPost]
-    [Authorize(Roles = "Admin,Shop Owner")]
+    [Authorize(Roles = "Admin,Store Owner")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -117,7 +117,7 @@ public class ProductsController : ControllerBase
     /// <param name="productUpdateDTO">Information about the product to update</param>
     /// <returns>No content</returns>
     [HttpPut("{id}")]
-    [Authorize(Roles = "Admin,Shop Owner,Shop Manager")]
+    [Authorize(Roles = "Admin,Store Owner,Store Manager")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -152,7 +152,7 @@ public class ProductsController : ControllerBase
     /// <param name="id">ID of the product to be deleted</param>
     /// <returns>No content</returns>
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin,Shop Owner,")]
+    [Authorize(Roles = "Admin,Store Owner,")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]

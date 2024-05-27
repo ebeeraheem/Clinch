@@ -51,7 +51,7 @@ public class CategoriesController : ControllerBase
     /// <param name="newCategoryDTO">The new category to create</param>
     /// <returns>A 'Location' response header with the URL of the newly created category</returns>
     [HttpPost]
-    [Authorize(Roles = "Admin,Shop Owner")]
+    [Authorize(Roles = "Admin,Store Owner")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -80,7 +80,7 @@ public class CategoriesController : ControllerBase
     /// <param name="newCategoryDTO">The updated category data</param>
     /// <returns>NoContent()</returns>
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "Admin,Shop Owner")]
+    [Authorize(Roles = "Admin,Store Owner")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -112,7 +112,7 @@ public class CategoriesController : ControllerBase
     /// <param name="id">ID of the category to be deteled</param>
     /// <returns>No content</returns>
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin,Shop Owner")]
+    [Authorize(Roles = "Admin,Store Owner")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
