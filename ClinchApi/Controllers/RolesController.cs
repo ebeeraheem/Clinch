@@ -1,5 +1,6 @@
 ﻿using ClinchApi.Models;
 using ClinchApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace ClinchApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Roles = "Admin")]
 public class RolesController : ControllerBase
 {
     private readonly RoleService _roleService;

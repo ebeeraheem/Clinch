@@ -25,6 +25,7 @@ public class AccountsController : ControllerBase
     /// </summary>
     /// <returns>Returns a list of all users</returns>
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult GetAllUsers()
     {
@@ -35,7 +36,7 @@ public class AccountsController : ControllerBase
     /// <summary>
     /// Return a user with the specified ID
     /// </summary>
-    /// <param name="userId">ID of teh user to return</param>
+    /// <param name="userId">ID of the user to return</param>
     /// <returns>A user</returns>
     [HttpGet("{userId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
