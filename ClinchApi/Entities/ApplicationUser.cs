@@ -9,7 +9,7 @@ public class ApplicationUser : IdentityUser<int>
     public string? MiddleName { get; set; }
     public string LastName { get; set; } = string.Empty;
     public Gender? Gender { get; set; }
-    public DateOnly? DateOfBirth { get; set; }
+    public DateOnly? DateOfBirth { get; set; } // Ensure a valid date of birth
 
     // Navigation properties for addresses
     public int? UserAddressId { get; set; }
@@ -20,9 +20,6 @@ public class ApplicationUser : IdentityUser<int>
 
     public int? ShippingAddressId { get; set; }
     public virtual Address? ShippingAddress { get; set; }
-
-    public int? PaymentId { get; set; }
-    public virtual Payment? Payment { get; set; }
 
     public virtual ICollection<Order>? Orders { get; set; }
 }
