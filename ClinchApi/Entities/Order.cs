@@ -12,8 +12,6 @@ public class Order
     public virtual Address? BillingAddress { get; set; }
     public int ShippingAddressId { get; set; }
     public virtual Address? ShippingAddress { get; set; }
-    public int PaymentId { get; set; }
-    public virtual Payment? Payment { get; set; }
     public virtual ICollection<OrderItem>? OrderItems { get; set; }
 }
 public enum OrderStatus
