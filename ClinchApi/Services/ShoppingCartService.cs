@@ -1,5 +1,6 @@
 ﻿using ClinchApi.Data;
 using ClinchApi.Entities;
+using ClinchApi.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClinchApi.Services;
@@ -35,13 +36,7 @@ public class ShoppingCartService
         if (shoppingCart is null)
         {
             //Create a new cart if it doesn't exist
-            shoppingCart = new()
-            {
-                UserId = userId,
-                ShoppingCartItemIds = new(),
-                ShoppingCartItems = new(),
-                CreatedAt = DateTime.UtcNow
-            };
+            shoppingCart = ShoppingCartCreator.CreateShoppingCart(userId);
 
             _context.ShoppingCarts.Add(shoppingCart);
             await _context.SaveChangesAsync();
@@ -68,8 +63,8 @@ public class ShoppingCartService
         _context.ShoppingCartItems.Add(itemToAdd);
         await _context.SaveChangesAsync();
 
-        shoppingCart.ShoppingCartItemIds.Add(itemToAdd.Id);
-        await _context.SaveChangesAsync();
+        //shoppingCart.ShoppingCartItemIds.Add(itemToAdd.Id);
+        //await _context.SaveChangesAsync();
 
         return shoppingCart;
     }
@@ -85,13 +80,7 @@ public class ShoppingCartService
         if (shoppingCart is null)
         {
             //Create a new cart if it doesn't exist
-            shoppingCart = new()
-            {
-                UserId = userId,
-                ShoppingCartItemIds = new(),
-                ShoppingCartItems = new(),
-                CreatedAt = DateTime.UtcNow
-            };
+            shoppingCart = ShoppingCartCreator.CreateShoppingCart(userId);
 
             _context.ShoppingCarts.Add(shoppingCart);
             await _context.SaveChangesAsync();
@@ -104,65 +93,50 @@ public class ShoppingCartService
     //NOTE: This endpoint should not be available to products that are not in the cart
     public async Task<ShoppingCart> IncreaseQuantity(int userId, int productId)
     {
-        using (var transaction = _context.Database.BeginTransaction())
+        using var transaction = _context.Database.BeginTransaction();
+
+        //Get the shopping cart based on the userId
+        var shoppingCart = _context.ShoppingCarts
+            .Include(c => c.ShoppingCartItems)
+            .SingleOrDefault(c => c.UserId == userId);
+
+        if (shoppingCart is null)
         {
-            //Get the shopping cart based on the userId
-            var shoppingCart = _context.ShoppingCarts
-                .Include(c => c.ShoppingCartItems)
-                .SingleOrDefault(c => c.UserId == userId);
+            //Create a new cart if it doesn't exist
+            shoppingCart = ShoppingCartCreator.CreateShoppingCart(userId);
 
-            if (shoppingCart is null)
-            {
-                //Create a new cart if it doesn't exist
-                shoppingCart = new()
-                {
-                    UserId = userId,
-                    ShoppingCartItemIds = new(),
-                    ShoppingCartItems = new(),
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                _context.ShoppingCarts.Add(shoppingCart);
-                await _context.SaveChangesAsync();
-            }
-
-            //Get the item to update from the cart
-            var itemToUpdate = shoppingCart.ShoppingCartItems
-                .FirstOrDefault(item => item.ProductId == productId);
-
-            if (itemToUpdate is null)
-            {
-                throw new ArgumentException("Product does not exist in the cart");
-            }
-
-            //Check the quantity of the product available
-            var product = await _context.Products
-                .SingleOrDefaultAsync(p => p.Id == productId);
-
-            if (product is null)
-            {
-                throw new ArgumentException($"Product with ID {productId} does not exist");
-            }
-
-            if (product.Quantity == 0)
-            {
-                throw new InvalidOperationException("Product out of stock");
-            }
-
-            //Increase the quantity of the item by one
-            itemToUpdate.Quantity++;
-
-            ////Decrease the quantity of the product by one
-            ////NOTE: it's not good to decrease the quantity of a product
-            ////just because somebody added it to their cart
-            ////because they might not buy it at all
-            //product.Quantity--;
-
+            _context.ShoppingCarts.Add(shoppingCart);
             await _context.SaveChangesAsync();
-            transaction.Commit();
-
-            return shoppingCart;
         }
+
+        //Get the item to update from the cart
+        var itemToUpdate = shoppingCart.ShoppingCartItems
+            .FirstOrDefault(item => item.ProductId == productId) ?? 
+            throw new ArgumentException("Product does not exist in the cart");
+
+        //Check the quantity of the product available
+        var product = await _context.Products
+            .SingleOrDefaultAsync(p => p.Id == productId) ?? 
+            throw new ArgumentException($"Product with ID {productId} does not exist");
+
+        if (product.Quantity == 0)
+        {
+            throw new InvalidOperationException("Product out of stock");
+        }
+
+        //Increase the quantity of the item by one
+        itemToUpdate.Quantity++;
+
+        ////Decrease the quantity of the product by one
+        ////NOTE: it's not good to decrease the quantity of a product
+        ////just because somebody added it to their cart
+        ////because they might not buy it at all
+        //product.Quantity--;
+
+        await _context.SaveChangesAsync();
+        transaction.Commit();
+
+        return shoppingCart;
     }
 
     //Decrease quantity (remove from cart if quantity = 0)
