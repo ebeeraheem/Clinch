@@ -33,6 +33,7 @@ builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<ShoppingCartService>();
 builder.Services.AddScoped<CheckoutService>();
+builder.Services.AddScoped<PaymentService>();
 builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<UserService>();
 
