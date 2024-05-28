@@ -4,9 +4,9 @@ namespace ClinchApi.Models;
 
 public class CheckoutModel
 {
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public string PhoneNumber { get; set; } = string.Empty;
+    public required string FirstName { get; set; }
+    public required string LastName { get; set; }
+    public required string PhoneNumber { get; set; }
 
     public int PaymentId { get; set; }
     public virtual Payment? Payment { get; set; }
