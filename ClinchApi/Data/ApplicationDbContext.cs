@@ -39,9 +39,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             property.SetScale(2);
         }
 
-        // Configuring the Gender enum to be stored as string
-        modelBuilder.Entity<ApplicationUser>()
-            .Property(e => e.Gender)
-            .HasConversion<string>();
+        //// It's generally recommended to store enums as their integer values.
+        //// Configuring the Gender enum to be stored as string
+        //modelBuilder.Entity<ApplicationUser>()
+        //    .Property(e => e.Gender)
+        //    .HasConversion<string>();
     }
 }
