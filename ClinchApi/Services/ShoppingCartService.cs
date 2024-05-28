@@ -107,6 +107,8 @@ public class ShoppingCartService
 
             _context.ShoppingCarts.Add(shoppingCart);
             await _context.SaveChangesAsync();
+
+            return shoppingCart;
         }
 
         //Get the item to update from the cart
@@ -151,29 +153,21 @@ public class ShoppingCartService
         if (shoppingCart is null)
         {
             //Create a new cart if it doesn't exist
-            shoppingCart = new()
-            {
-                UserId = userId,
-                ShoppingCartItemIds = new(),
-                ShoppingCartItems = new(),
-                CreatedAt = DateTime.UtcNow
-            };
+            shoppingCart = ShoppingCartCreator.CreateShoppingCart(userId);
 
             _context.ShoppingCarts.Add(shoppingCart);
             await _context.SaveChangesAsync();
+
+            return shoppingCart;
         }
 
         //Get the item to update from the cart
-        var itemToUpdate = shoppingCart.ShoppingCartItems.FirstOrDefault(item => item.ProductId == productId);
-
-        if (itemToUpdate is null)
-        {
+        var itemToUpdate = shoppingCart.ShoppingCartItems.FirstOrDefault(item => item.ProductId == productId) ?? 
             throw new ArgumentException("Product does not exist in the cart");
-        }
 
         if (itemToUpdate.Quantity == 1)
         {
-            shoppingCart.ShoppingCartItemIds.Remove(itemToUpdate.Id);
+            //shoppingCart.ShoppingCartItemIds.Remove(itemToUpdate.Id);
             shoppingCart.ShoppingCartItems.Remove(itemToUpdate);
         }
         else
@@ -198,29 +192,21 @@ public class ShoppingCartService
         if (shoppingCart is null)
         {
             //Create a new cart if it doesn't exist
-            shoppingCart = new()
-            {
-                UserId = userId,
-                ShoppingCartItemIds = new(),
-                ShoppingCartItems = new(),
-                CreatedAt = DateTime.UtcNow
-            };
+            shoppingCart = ShoppingCartCreator.CreateShoppingCart(userId);
 
             _context.ShoppingCarts.Add(shoppingCart);
             await _context.SaveChangesAsync();
+
+            return shoppingCart;
         }
 
         //Get the item to remove from the shopping cart
         var itemToRemove = shoppingCart.ShoppingCartItems
-            .FirstOrDefault(item => item.ProductId == productId);
-
-        if (itemToRemove is null)
-        {
+            .FirstOrDefault(item => item.ProductId == productId) ?? 
             throw new ArgumentException("Product does not exist in the cart");
-        }
 
         //Remove the item and its associated ID
-        shoppingCart.ShoppingCartItemIds.Remove(itemToRemove.Id);
+        //shoppingCart.ShoppingCartItemIds.Remove(itemToRemove.Id);
         shoppingCart.ShoppingCartItems.Remove(itemToRemove);
 
         await _context.SaveChangesAsync();
@@ -240,16 +226,12 @@ public class ShoppingCartService
         if (shoppingCart is null)
         {
             //Create a new cart if it doesn't exist
-            shoppingCart = new()
-            {
-                UserId = userId,
-                ShoppingCartItemIds = new(),
-                ShoppingCartItems = new(),
-                CreatedAt = DateTime.UtcNow
-            };
+            shoppingCart = ShoppingCartCreator.CreateShoppingCart(userId);
 
             _context.ShoppingCarts.Add(shoppingCart);
             await _context.SaveChangesAsync();
+
+            return shoppingCart;
         }
 
         //Get all the items in the cart
@@ -258,7 +240,7 @@ public class ShoppingCartService
         //Remove all the items and their associated IDs
         foreach (var item in cartItems)
         {
-            shoppingCart.ShoppingCartItemIds.Remove(item.Id);
+            //shoppingCart.ShoppingCartItemIds.Remove(item.Id);
             shoppingCart.ShoppingCartItems.Remove(item);
         }
 
