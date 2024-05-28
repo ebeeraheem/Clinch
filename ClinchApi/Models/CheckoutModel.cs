@@ -7,6 +7,7 @@ public class CheckoutModel
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
     public required string PhoneNumber { get; set; }
+    public required string PaymentToken { get; set; }
 
     public int PaymentId { get; set; }
     public virtual Payment? Payment { get; set; }
