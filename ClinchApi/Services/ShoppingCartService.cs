@@ -19,12 +19,8 @@ public class ShoppingCartService
     {
         //Get the product to add to the cart
         var productToAdd = await _context.Products.AsNoTracking()
-            .SingleOrDefaultAsync(p => p.Id == productId);
-
-        if (productToAdd is null)
-        {
+            .SingleOrDefaultAsync(p => p.Id == productId) ?? 
             throw new InvalidOperationException($"Product with id {productId} not found");
-        }
 
         //NOTE: Any item that is out of stock should have the AddToCart endpoint disabled
 
@@ -44,7 +40,10 @@ public class ShoppingCartService
 
         //Check if item already exists in the shoppingCart
         //NOTE: any item that is already in the cart should not have the AddToCart endpoint available
-        var existingItem = _context.ShoppingCartItems.FirstOrDefault(item => item.ProductId == productId && item.ShoppingCartId == shoppingCart.Id);
+        var existingItem = _context.ShoppingCartItems
+            .FirstOrDefault(item => item.ProductId == productId &&
+            item.ShoppingCartId == shoppingCart.Id);
+
         if (existingItem is not null)
         {
             throw new ArgumentException("Product is already in the cart");
@@ -108,7 +107,7 @@ public class ShoppingCartService
             _context.ShoppingCarts.Add(shoppingCart);
             await _context.SaveChangesAsync();
 
-            return shoppingCart;
+            return shoppingCart; // return early if cart is null
         }
 
         //Get the item to update from the cart
@@ -123,7 +122,7 @@ public class ShoppingCartService
 
         if (product.Quantity == 0)
         {
-            throw new InvalidOperationException("Product out of stock");
+            throw new InvalidOperationException($"The product {product.Name} is out of stock");
         }
 
         //Increase the quantity of the item by one
@@ -158,7 +157,7 @@ public class ShoppingCartService
             _context.ShoppingCarts.Add(shoppingCart);
             await _context.SaveChangesAsync();
 
-            return shoppingCart;
+            return shoppingCart; // return early if cart is null
         }
 
         //Get the item to update from the cart
@@ -197,7 +196,7 @@ public class ShoppingCartService
             _context.ShoppingCarts.Add(shoppingCart);
             await _context.SaveChangesAsync();
 
-            return shoppingCart;
+            return shoppingCart; // return early if cart is null
         }
 
         //Get the item to remove from the shopping cart
@@ -231,7 +230,7 @@ public class ShoppingCartService
             _context.ShoppingCarts.Add(shoppingCart);
             await _context.SaveChangesAsync();
 
-            return shoppingCart;
+            return shoppingCart; // return early if cart is null
         }
 
         //Get all the items in the cart
