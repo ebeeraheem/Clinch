@@ -4,10 +4,10 @@ namespace ClinchApi.Models;
 
 public class CheckoutModel
 {
-    public required string FirstName { get; set; }
-    public required string LastName { get; set; }
+    //public required string FirstName { get; set; }
+    //public required string LastName { get; set; }
     public required string EmailAddress { get; set; }
-    public required string PhoneNumber { get; set; }
+    //public required string PhoneNumber { get; set; }
     public required string PaymentToken { get; set; }
     public string? Notes { get; set; }
 
