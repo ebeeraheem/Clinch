@@ -3,68 +3,108 @@ using ClinchApi.Extensions;
 using ClinchApi.Entities;
 using Microsoft.EntityFrameworkCore;
 using ClinchApi.Models.DTOs;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ClinchApi.Services;
 
 public class AddressService
 {
     private readonly ApplicationDbContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public AddressService(ApplicationDbContext context)
+    public AddressService(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
     {
         _context = context;
+        _userManager = userManager;
+    }
+
+    // Get a user's addresses
+    public List<Address> GetAddresses(int userId)
+    {
+        // Get the user
+        var user = _userManager.Users
+            .SingleOrDefault(u => u.Id == userId) ??
+            throw new InvalidOperationException($"User with ID {userId} not found");
+
+        return user.Addresses;
     }
 
     //Get an address
-    public async Task<Address?> GetAddressById(int id)
+    public Address? GetAddressById(int userId, int addressId)
     {
-        return await _context.Addresses.AsNoTracking()
-            .SingleOrDefaultAsync(a => a.Id == id);
+        // Get the user
+        var user = _userManager.Users
+            .SingleOrDefault(u => u.Id == userId) ??
+            throw new InvalidOperationException($"User with ID {userId} not found");
+
+        // Get the user's address
+        var address = user.Addresses
+            .SingleOrDefault(a => a.Id == addressId) ??
+            throw new InvalidOperationException("Address not found");
+
+        return address;
     }
 
     //Add an address
-    public async Task<Address> Create(AddressDTO addressDTO)
+    public async Task<Address> Create(int userId, AddressDTO addressDTO)
     {
+        // Get the user
+        var user = _userManager.Users
+            .SingleOrDefault(u => u.Id == userId) ?? 
+            throw new InvalidOperationException($"User with ID {userId} not found");
+
         var validAddressDTO = AddressValidator.ValidateAddress(addressDTO);
         var address = validAddressDTO.ConvertToAddress();
 
-        _context.Addresses.Add(address);
+        user.Addresses.Add(address);
         await _context.SaveChangesAsync();
 
         return address;
     }
 
     //Update an address
-    public async Task Update(int id, Address address)
+    public async Task Update(int userId, int addressId, Address address)
     {
-        if (address is null || address.Id != id)
+        if (address is null || address.Id != addressId)
         {
             throw new ArgumentException("Invalid ID or address");
         }
 
+        // Get the user
+        var user = _userManager.Users
+            .SingleOrDefault(u => u.Id == userId) ??
+            throw new InvalidOperationException($"User with ID {userId} not found");
+
+        // Get the user's address
+        var addressToUpdate = user.Addresses
+            .SingleOrDefault(a => a.Id == addressId) ?? 
+            throw new InvalidOperationException("Address not found");
+
+        // Validate the new address
         var validAddress = AddressValidator.ValidateAddress(address);
 
-        var addressToUpdate = await _context.Addresses.FindAsync(id);
-        if (addressToUpdate is null)
-        {
-            throw new InvalidOperationException("Address not found");
-        }
-
-        _context.Entry(addressToUpdate).CurrentValues.SetValues(validAddress);
+        // Update the address
+        addressToUpdate = validAddress;
 
         await _context.SaveChangesAsync();
     }
 
     //Delete an address
-    public async Task Delete(int id)
+    public async Task Delete(int userId, int addressId)
     {
-        var addressToDelete = await _context.Addresses.FindAsync(id);
-        if (addressToDelete is null)
-        {
-            throw new InvalidOperationException($"Address with ID {id} not found");
-        }
+        // Get the user
+        var user = _userManager.Users
+            .SingleOrDefault(u => u.Id == userId) ??
+            throw new InvalidOperationException($"User with ID {userId} not found");
 
-        _context.Addresses.Remove(addressToDelete);
+        // Get the user's address
+        var addressToDelete = user.Addresses
+            .SingleOrDefault(a => a.Id == addressId) ??
+            throw new InvalidOperationException("Address not found");
+
+        // Remove the address
+        user.Addresses.Remove(addressToDelete);
         await _context.SaveChangesAsync();
     }
 }
