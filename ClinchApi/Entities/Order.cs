@@ -6,7 +6,7 @@ public class Order
     public int UserId {  get; set; }
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
-    public DateTime OrderDate { get; set; } = DateTime.UtcNow;
+    public DateTime OrderDate { get; set; }
     public decimal TotalAmount { get; set; }
     public string PaymentDetails { get; set; } = string.Empty;
     public string? OrderNotes { get; set; }

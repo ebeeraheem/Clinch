@@ -3,6 +3,7 @@ using ClinchApi.Entities;
 using ClinchApi.Models;
 using ClinchApi.Models.Results;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClinchApi.Services;
 
@@ -21,22 +22,36 @@ public class CheckoutService
 
     public async Task<CheckoutResult> ProcessCheckoutAsync(CheckoutModel checkoutModel)
     {
-        var user = await _userManager.FindByEmailAsync(checkoutModel.EmailAddress);
-
+        // Get the user
+        var user = await _userManager.FindByIdAsync(checkoutModel.UserId);
         if (user is null)
         {
             return new CheckoutResult
             {
                 Success = false,
-                Message = "User not found."
+                Message = $"User with ID {checkoutModel.UserId} not found."
+            };
+        }
+        // Get the user's cart
+        var cart = await _context.ShoppingCarts
+            .Include(c => c.ShoppingCartItems)
+            .SingleOrDefaultAsync(c => c.UserId.ToString() == checkoutModel.UserId);
+
+        if (cart is null)
+        {
+            return new CheckoutResult
+            {
+                Success = false,
+                Message = "Cart not found"
             };
         }
 
-        // Calculate total amount
-        var totalAmount = checkoutModel.Items.Sum(item => item.Price * item.Quantity);
+        // Calculate the total amount of the order
+        var totalAmount = cart.ShoppingCartItems.Sum(item => item.UnitPrice * item.Quantity);
 
         // Process payment
-        var paymentResult = await _paymentService.ProcessPaymentAsync(checkoutModel.PaymentToken, totalAmount);
+        var paymentResult = await _paymentService
+            .ProcessPaymentAsync(checkoutModel.PaymentToken, totalAmount);
 
         if (!paymentResult.Success)
         {
@@ -50,7 +65,7 @@ public class CheckoutService
         // Process order logic
         var order = new Order()
         {
-            UserId = user.Id.ToString(),
+            UserId = user.Id,
             FirstName = user.FirstName,
             LastName = user.LastName,
             OrderDate = DateTime.UtcNow,
@@ -58,15 +73,14 @@ public class CheckoutService
             OrderStatus = OrderStatus.Pending,
             TotalAmount = totalAmount,
             PaymentDetails = paymentResult.TransactionId,
-            OrderItems = checkoutModel.Items.Select(item => new OrderItem()
+            OrderItems = cart.ShoppingCartItems.Select(item => new OrderItem()
             {
                 ProductId = item.ProductId,
-                Quantity = item.Quantity,
-                Price = item.Price,
-                //OrderId = item.OrderId,
+                Price = item.UnitPrice,
+                Quantity = item.Quantity
             }).ToList(),
-            BillingAddress = checkoutModel.BillingAddress,
-            ShippingAddress = checkoutModel.ShippingAddress
+            BillingAddress = user.BillingAddress!.GetFullAddress(),
+            ShippingAddress = user.ShippingAddress!.GetFullAddress()
         };
 
         // Save order to database

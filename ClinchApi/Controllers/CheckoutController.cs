@@ -19,6 +19,8 @@ public class CheckoutController : ControllerBase
 
     [HttpPost]
     [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Checkout([FromBody] CheckoutModel checkoutModel)
     {
         if (!ModelState.IsValid)
