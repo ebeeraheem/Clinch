@@ -9,9 +9,7 @@ public static class ShoppingCartCreator
         return new()
         {
             UserId = userId,
-            //ShoppingCartItemIds = new(),
-            ShoppingCartItems = [],
-            CreatedAt = DateTime.UtcNow
+            ShoppingCartItems = []
         };
     }
 }
