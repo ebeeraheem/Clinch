@@ -15,8 +15,7 @@ public static class AddressConverter
             State = addressDTO.State,
             PostalCode = addressDTO.PostalCode,
             Country = addressDTO.Country,
-            IsBillingAddress = addressDTO.IsBillingAddress,
-            IsShippingAddress = addressDTO.IsShippingAddress
+            AddressType = addressDTO.AddressType
         };
 
         return address;

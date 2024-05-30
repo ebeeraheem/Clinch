@@ -1,4 +1,5 @@
-﻿using ClinchApi.Entities.Interfaces;
+﻿using ClinchApi.Entities;
+using ClinchApi.Entities.Interfaces;
 
 namespace ClinchApi.Models.DTOs;
 
@@ -10,7 +11,6 @@ public class AddressDTO : IAddressBase
     public string? PostalCode { get; set; } = string.Empty;
     public string Country { get; set; } = string.Empty;
 
-    // Additional properties for identifying address types
-    public bool IsBillingAddress { get; set; } = false;
-    public bool IsShippingAddress { get; set; } = false;
+    // Address type
+    public AddressType AddressType { get; set; }
 }

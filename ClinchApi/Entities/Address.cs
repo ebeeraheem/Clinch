@@ -12,11 +12,10 @@ public class Address : IAddressBase
     public string? PostalCode { get; set; } = string.Empty;
     public string Country { get; set; } = string.Empty;
 
-    // Additional properties for identifying address types
-    public bool IsBillingAddress { get; set; }
-    public bool IsShippingAddress { get; set; }
+    // Address type
+    public AddressType AddressType { get; set; }
 
-    //Get full address
+    // Get full address
     public string GetFullAddress()
     {
         var fullAddress = new StringBuilder();
@@ -38,7 +37,7 @@ public class Address : IAddressBase
         }
         if (!string.IsNullOrEmpty(PostalCode))
         {
-            fullAddress.Append(" ");
+            fullAddress.Append(' ');
             fullAddress.Append(PostalCode);
         }
         if (!string.IsNullOrEmpty(Country))
@@ -50,4 +49,13 @@ public class Address : IAddressBase
         return fullAddress.ToString().Trim();
     }
 
+
+}
+
+// Enum to represent address types
+public enum AddressType
+{
+    UserAddress,
+    BillingAddress,
+    ShippingAddress
 }

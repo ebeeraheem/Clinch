@@ -11,15 +11,8 @@ public class ApplicationUser : IdentityUser<int>
     public Gender? Gender { get; set; }
     public DateOnly? DateOfBirth { get; set; } // Ensure a valid date of birth
 
-    // Navigation properties for addresses
-    public int? UserAddressId { get; set; }
-    public virtual Address? UserAddress { get; set; }
-
-    public int? BillingAddressId { get; set; }
-    public virtual Address? BillingAddress { get; set; }
-
-    public int? ShippingAddressId { get; set; }
-    public virtual Address? ShippingAddress { get; set; }
+    // User addresses
+    public List<Address> Addresses { get; set; } = [];
 
     public virtual ICollection<Order>? Orders { get; set; }
 }
