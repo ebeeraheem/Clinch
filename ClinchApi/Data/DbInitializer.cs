@@ -7,44 +7,7 @@ public static class DbInitializer
 {
     public static async Task Initialize(ApplicationDbContext context, IServiceProvider serviceProvider)
     {
-            // Add address if no address is found in the db
-        if (!context.Addresses.Any())
-        {
-            var rZaki = new Address()
-            {
-                StreetAddress = "Layin Mahalli, Rijiyar Zaki",
-                City = "Kano",
-                State = "Kano State",
-                Country = "Nigeria",
-                PostalCode = "700001",
-                IsBillingAddress = true,
-                IsShippingAddress = false
-            };
-            var dorayi = new Address()
-            {
-                StreetAddress = "Layin Masallacin Dan Sarari",
-                City = "Kano",
-                State = "Kano State",
-                Country = "Nigeria",
-                PostalCode = "700001",
-                IsBillingAddress = true,
-                IsShippingAddress = true
-            };
-            var abuja = new Address()
-            {
-                StreetAddress = "Maitama Street",
-                City = "Abuja",
-                State = "FCT",
-                Country = "Nigeria",
-                PostalCode = "700421",
-                IsBillingAddress = false,
-                IsShippingAddress = false
-            };
-
-            context.Addresses.AddRange(rZaki, dorayi, abuja);
-        }
-
-            // Add categories if no category is found in the db
+        // Add categories if no category is found in the db
         if (!context.Categories.Any())
         {
             var uncategorized = new Category { Name = "Uncategorized" };
@@ -209,47 +172,78 @@ public static class DbInitializer
             context.SaveChanges();
         }
 
-        // 
-        using (var scope = serviceProvider.CreateScope())
+        // Create a collection of addresses
+        var addresses = new List<Address>();
+
+        var rZaki = new Address()
         {
-            var userManager = scope.ServiceProvider
-                .GetRequiredService<UserManager<ApplicationUser>>();
+            StreetAddress = "Layin Mahalli, Rijiyar Zaki",
+            City = "Kano",
+            State = "Kano State",
+            Country = "Nigeria",
+            PostalCode = "700001",
+            AddressType = AddressType.UserAddress
+        };
+        var dorayi = new Address()
+        {
+            StreetAddress = "Layin Masallacin Dan Sarari",
+            City = "Kano",
+            State = "Kano State",
+            Country = "Nigeria",
+            PostalCode = "700001",
+            AddressType = AddressType.BillingAddress
+        };
+        var abuja = new Address()
+        {
+            StreetAddress = "Maitama Street",
+            City = "Abuja",
+            State = "FCT",
+            Country = "Nigeria",
+            PostalCode = "700421",
+            AddressType = AddressType.ShippingAddress
+        };
+        addresses.Add(rZaki);
+        addresses.Add(dorayi);
+        addresses.Add(abuja);
 
-            var roleManager = scope.ServiceProvider
-                .GetRequiredService<RoleManager<IdentityRole<int>>>();
+        using var scope = serviceProvider.CreateScope();
+        var userManager = scope.ServiceProvider
+            .GetRequiredService<UserManager<ApplicationUser>>();
 
-            // Seed roles
-            string[] roleNames = { "Admin", "Store Owner", "Store Manager", "Customer" };
-            foreach (var roleName in roleNames)
+        var roleManager = scope.ServiceProvider
+            .GetRequiredService<RoleManager<IdentityRole<int>>>();
+
+        // Seed roles
+        string[] roleNames = { "Admin", "Store Owner", "Store Manager", "Customer" };
+        foreach (var roleName in roleNames)
+        {
+            if (!await roleManager.RoleExistsAsync(roleName))
             {
-                if (!await roleManager.RoleExistsAsync(roleName))
-                {
-                    await roleManager.CreateAsync(new IdentityRole<int>(roleName));
-                }
+                await roleManager.CreateAsync(new IdentityRole<int>(roleName));
             }
+        }
 
-            // Seed default admin user
-            var adminUserEmail = "admin@example.com";
-            var adminUser = await userManager.FindByEmailAsync(adminUserEmail);
-            if (adminUser is null)
+        // Seed default admin user
+        var adminUserEmail = "admin@example.com";
+        var adminUser = await userManager.FindByEmailAsync(adminUserEmail);
+        if (adminUser is null)
+        {
+            var user = new ApplicationUser
             {
-                var user = new ApplicationUser
-                {
-                    UserGuid = Guid.NewGuid(),
-                    UserName = adminUserEmail,
-                    Email = adminUserEmail,
-                    FirstName = "Ibrahim",
-                    LastName = "Suleiman",
-                    PhoneNumber = "08143660104",
-                    Gender = Gender.Male,
-                    DateOfBirth = new DateOnly(1999, 1, 4),
-                    UserAddressId = 1
-                };
-                var result = await userManager.CreateAsync(user, "Admin@123");
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(user, "Admin");
-                }
+                UserGuid = Guid.NewGuid(),
+                UserName = adminUserEmail,
+                Email = adminUserEmail,
+                FirstName = "Ibrahim",
+                LastName = "Suleiman",
+                PhoneNumber = "08143660104",
+                Gender = Gender.Male,
+                DateOfBirth = new DateOnly(1999, 1, 4),
+                Addresses = addresses
+            };
+            var result = await userManager.CreateAsync(user, "Admin@123");
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(user, "Admin");
             }
         }
     }
