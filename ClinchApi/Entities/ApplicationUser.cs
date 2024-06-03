@@ -11,10 +11,8 @@ public class ApplicationUser : IdentityUser<int>
     public Gender? Gender { get; set; }
     public DateOnly? DateOfBirth { get; set; } // Ensure a valid date of birth
 
-    // User addresses
     public List<Address> Addresses { get; set; } = [];
-
-    public virtual ICollection<Order>? Orders { get; set; }
+    public List<Order?> Orders { get; set; } = [];
 }
 
 public enum Gender

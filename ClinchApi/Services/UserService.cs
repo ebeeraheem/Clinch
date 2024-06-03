@@ -28,8 +28,7 @@ public class UserService
             LastName = user.LastName,
             Gender = user.Gender,
             DateOfBirth = user.DateOfBirth,
-            Email = user.Email,
-            PhoneNumber = user.PhoneNumber
+            PhoneNumber = user.PhoneNumber!
         };
     }
 
@@ -48,8 +47,7 @@ public class UserService
                 LastName = user.LastName,
                 Gender = user.Gender,
                 DateOfBirth = user.DateOfBirth,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber
+                PhoneNumber = user.PhoneNumber!
             };
 
             output.Add(userModel);
@@ -71,8 +69,6 @@ public class UserService
         user.FirstName = model.FirstName;
         user.MiddleName = model.MiddleName;
         user.LastName = model.LastName;
-        user.Email = model.Email;
-        user.UserName = model.Email;
         user.PhoneNumber = model.PhoneNumber;
         user.Gender = model.Gender;
         user.DateOfBirth = model.DateOfBirth;

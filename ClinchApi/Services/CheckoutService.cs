@@ -1,5 +1,6 @@
 ﻿using ClinchApi.Data;
 using ClinchApi.Entities;
+using ClinchApi.Extensions;
 using ClinchApi.Models;
 using ClinchApi.Models.Results;
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +24,10 @@ public class CheckoutService
     public async Task<CheckoutResult> ProcessCheckoutAsync(CheckoutModel checkoutModel)
     {
         // Get the user
-        var user = await _userManager.FindByIdAsync(checkoutModel.UserId);
+        var user = await _userManager.Users
+            .Include(u => u.Addresses)
+            .FirstOrDefaultAsync(u => u.Id.ToString() == checkoutModel.UserId);
+
         if (user is null)
         {
             return new CheckoutResult
@@ -63,8 +67,11 @@ public class CheckoutService
         }
 
         // Get user's billing and shipping addresses
-        var billingAddress = user.Addresses.SingleOrDefault(a => a.AddressType == AddressType.BillingAddress);
-        var shippingAddress = user.Addresses.SingleOrDefault(a => a.AddressType == AddressType.ShippingAddress);
+        var billingAddress = user.Addresses.SingleOrDefault(
+            a => a.AddressType == AddressType.BillingAddress);
+
+        var shippingAddress = user.Addresses.SingleOrDefault(
+            a => a.AddressType == AddressType.ShippingAddress);
 
         // Process order logic
         var order = new Order()
@@ -83,12 +90,18 @@ public class CheckoutService
                 Price = item.UnitPrice,
                 Quantity = item.Quantity
             }).ToList(),
-            BillingAddress = billingAddress.GetFullAddress(),
-            ShippingAddress = shippingAddress.GetFullAddress()
+            BillingAddress = billingAddress!.GetFullAddress(),
+            ShippingAddress = shippingAddress!.GetFullAddress()
         };
 
-        // Save order to database
+        // Add order to database and user orders
         _context.Orders.Add(order);
+        user.Orders.Add(order);
+
+        // Clear the user's cart
+        cart.ShoppingCartItems.Clear();
+        _context.ShoppingCarts.Update(cart);
+
         await _context.SaveChangesAsync();
 
         return new CheckoutResult
