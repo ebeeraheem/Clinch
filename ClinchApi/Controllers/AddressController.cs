@@ -23,7 +23,7 @@ public class AddressController : ControllerBase
     /// <returns>A list of the user's addresses</returns>
     [HttpGet("{userId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public ActionResult<List<Address>> GetAddresses(int userId)
     {
@@ -33,7 +33,7 @@ public class AddressController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
-            return BadRequest(ex.Message);
+            return NotFound(ex.Message);
         }
         catch (Exception)
         {
@@ -50,7 +50,7 @@ public class AddressController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public ActionResult<Address?> GetAddressById(int userId, int addressId)
+    public ActionResult<Address?> GetAddress(int userId, int addressId)
     {
         try
         {
@@ -86,7 +86,7 @@ public class AddressController : ControllerBase
         {
             var address = await _addressService.Create(userId, newAddressDTO);
 
-            return CreatedAtAction(nameof(GetAddressById), new { id = address.Id }, address);
+            return CreatedAtAction(nameof(GetAddress), new { userId, addressId = address.Id }, address);
         }
         catch (InvalidOperationException ex)
         {

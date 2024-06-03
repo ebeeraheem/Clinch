@@ -24,6 +24,7 @@ public class AddressService
     {
         // Get the user
         var user = _userManager.Users
+            .Include(u => u.Addresses)
             .SingleOrDefault(u => u.Id == userId) ??
             throw new InvalidOperationException($"User with ID {userId} not found");
 
@@ -35,13 +36,12 @@ public class AddressService
     {
         // Get the user
         var user = _userManager.Users
+            .Include(u => u.Addresses)
             .SingleOrDefault(u => u.Id == userId) ??
             throw new InvalidOperationException($"User with ID {userId} not found");
 
-        // Get the user's address
-        var address = user.Addresses
-            .SingleOrDefault(a => a.Id == addressId) ??
-            throw new InvalidOperationException("Address not found");
+        // Get the address by its ID
+        var address = user.Addresses.SingleOrDefault(a => a.Id == addressId);
 
         return address;
     }
@@ -51,6 +51,7 @@ public class AddressService
     {
         // Get the user
         var user = _userManager.Users
+            .Include(u => u.Addresses)
             .SingleOrDefault(u => u.Id == userId) ?? 
             throw new InvalidOperationException($"User with ID {userId} not found");
 
@@ -73,19 +74,26 @@ public class AddressService
 
         // Get the user
         var user = _userManager.Users
+            .Include(u => u.Addresses)
             .SingleOrDefault(u => u.Id == userId) ??
             throw new InvalidOperationException($"User with ID {userId} not found");
 
         // Get the user's address
         var addressToUpdate = user.Addresses
             .SingleOrDefault(a => a.Id == addressId) ?? 
-            throw new InvalidOperationException("Address not found");
+            throw new InvalidOperationException($"Address with ID {addressId} not found");
 
         // Validate the new address
         var validAddress = AddressValidator.ValidateAddress(address);
 
         // Update the address
-        addressToUpdate = validAddress;
+        addressToUpdate.Id = validAddress.Id;
+        addressToUpdate.StreetAddress = validAddress.StreetAddress;
+        addressToUpdate.City = validAddress.City;
+        addressToUpdate.State = validAddress.State;
+        addressToUpdate.Country = validAddress.Country;
+        addressToUpdate.PostalCode = validAddress.PostalCode;
+        addressToUpdate.AddressType = validAddress.AddressType;
 
         await _context.SaveChangesAsync();
     }
@@ -94,14 +102,14 @@ public class AddressService
     public async Task Delete(int userId, int addressId)
     {
         // Get the user
-        var user = _userManager.Users
+        var user = _userManager.Users.Include(u => u.Addresses)
             .SingleOrDefault(u => u.Id == userId) ??
             throw new InvalidOperationException($"User with ID {userId} not found");
 
         // Get the user's address
         var addressToDelete = user.Addresses
             .SingleOrDefault(a => a.Id == addressId) ??
-            throw new InvalidOperationException("Address not found");
+            throw new InvalidOperationException($"Address with ID {addressId} not found");
 
         // Remove the address
         user.Addresses.Remove(addressToDelete);

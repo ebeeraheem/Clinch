@@ -62,6 +62,10 @@ public class CheckoutService
             };
         }
 
+        // Get user's billing and shipping addresses
+        var billingAddress = user.Addresses.SingleOrDefault(a => a.AddressType == AddressType.BillingAddress);
+        var shippingAddress = user.Addresses.SingleOrDefault(a => a.AddressType == AddressType.ShippingAddress);
+
         // Process order logic
         var order = new Order()
         {
@@ -79,8 +83,8 @@ public class CheckoutService
                 Price = item.UnitPrice,
                 Quantity = item.Quantity
             }).ToList(),
-            BillingAddress = user.BillingAddress!.GetFullAddress(),
-            ShippingAddress = user.ShippingAddress!.GetFullAddress()
+            BillingAddress = billingAddress.GetFullAddress(),
+            ShippingAddress = shippingAddress.GetFullAddress()
         };
 
         // Save order to database

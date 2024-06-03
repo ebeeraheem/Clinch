@@ -245,6 +245,7 @@ public static class DbInitializer
             {
                 await userManager.AddToRoleAsync(user, "Admin");
             }
-        }
+            await context.SaveChangesAsync();
+        }        
     }
 }
