@@ -1,11 +1,12 @@
 ﻿using ClinchApi.Data;
 using ClinchApi.Entities;
 using ClinchApi.Extensions;
+using ClinchApi.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClinchApi.Services;
 
-public class ShoppingCartService
+public class ShoppingCartService : IShoppingCartService
 {
     private readonly ApplicationDbContext _context;
 
@@ -31,7 +32,7 @@ public class ShoppingCartService
     {
         //Get the product to add to the cart
         var productToAdd = await _context.Products.AsNoTracking()
-            .SingleOrDefaultAsync(p => p.Id == productId) ?? 
+            .SingleOrDefaultAsync(p => p.Id == productId) ??
             throw new InvalidOperationException($"Product with id {productId} not found");
 
         //NOTE: Any item that is out of stock should have the AddToCart endpoint disabled
@@ -44,7 +45,7 @@ public class ShoppingCartService
         if (shoppingCart is null)
         {
             //Create a new cart if it doesn't exist
-            shoppingCart = new(){ UserId = userId };
+            shoppingCart = new() { UserId = userId };
 
             _context.ShoppingCarts.Add(shoppingCart);
             await _context.SaveChangesAsync();
@@ -72,7 +73,7 @@ public class ShoppingCartService
 
         return shoppingCart;
     }
-        
+
     //Increase quantity (Some products might have max purchase limit)
     //NOTE: This endpoint should not be available to products that are not in the cart
     public async Task<ShoppingCart> IncreaseQuantity(int userId, int productId)
@@ -87,12 +88,12 @@ public class ShoppingCartService
 
         //Get the item to update from the cart
         var itemToUpdate = shoppingCart.ShoppingCartItems
-            .FirstOrDefault(item => item.ProductId == productId) ?? 
+            .FirstOrDefault(item => item.ProductId == productId) ??
             throw new ArgumentException("Product does not exist in the cart");
 
         //Check the quantity of the product available
         var product = await _context.Products
-            .SingleOrDefaultAsync(p => p.Id == productId) ?? 
+            .SingleOrDefaultAsync(p => p.Id == productId) ??
             throw new ArgumentException($"Product with ID {productId} does not exist");
 
         if (product.Quantity == 0)
@@ -120,7 +121,7 @@ public class ShoppingCartService
             throw new InvalidOperationException("Cart not found");
 
         //Get the item to update from the cart
-        var itemToUpdate = shoppingCart.ShoppingCartItems.FirstOrDefault(item => item.ProductId == productId) ?? 
+        var itemToUpdate = shoppingCart.ShoppingCartItems.FirstOrDefault(item => item.ProductId == productId) ??
             throw new ArgumentException("Product does not exist in the cart");
 
         if (itemToUpdate.Quantity == 1)
@@ -149,7 +150,7 @@ public class ShoppingCartService
 
         //Get the item to remove from the shopping cart
         var itemToRemove = shoppingCart.ShoppingCartItems
-            .FirstOrDefault(item => item.ProductId == productId) ?? 
+            .FirstOrDefault(item => item.ProductId == productId) ??
             throw new ArgumentException("Product does not exist in the cart");
 
         //Remove the item

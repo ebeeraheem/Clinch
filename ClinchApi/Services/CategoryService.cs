@@ -3,10 +3,11 @@ using ClinchApi.Extensions;
 using ClinchApi.Entities;
 using Microsoft.EntityFrameworkCore;
 using ClinchApi.Models.DTOs;
+using ClinchApi.Services.Interfaces;
 
 namespace ClinchApi.Services;
 
-public class CategoryService
+public class CategoryService : ICategoryService
 {
     private readonly ApplicationDbContext _context;
 

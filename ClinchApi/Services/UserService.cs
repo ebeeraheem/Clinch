@@ -1,11 +1,12 @@
 ﻿using ClinchApi.Data;
 using ClinchApi.Entities;
 using ClinchApi.Models;
+using ClinchApi.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace ClinchApi.Services;
 
-public class UserService
+public class UserService : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
@@ -18,7 +19,7 @@ public class UserService
     //Get user by id
     public async Task<UpdateUserModel> GetUserByIdAsync(string userId)
     {
-        var user = await _userManager.FindByIdAsync(userId) ?? 
+        var user = await _userManager.FindByIdAsync(userId) ??
             throw new ArgumentException($"User with ID {userId} not found.");
 
         return new UpdateUserModel
@@ -64,7 +65,7 @@ public class UserService
         {
             return IdentityResult.Failed(
                 new IdentityError { Description = $"User with ID {userId} not found" });
-        }        
+        }
 
         user.FirstName = model.FirstName;
         user.MiddleName = model.MiddleName;

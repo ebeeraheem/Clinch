@@ -3,12 +3,13 @@ using ClinchApi.Entities;
 using ClinchApi.Extensions;
 using ClinchApi.Models;
 using ClinchApi.Models.Results;
+using ClinchApi.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClinchApi.Services;
 
-public class CheckoutService
+public class CheckoutService : ICheckoutService
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;

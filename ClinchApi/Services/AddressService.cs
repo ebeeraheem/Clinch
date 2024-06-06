@@ -5,10 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using ClinchApi.Models.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ClinchApi.Services.Interfaces;
 
 namespace ClinchApi.Services;
 
-public class AddressService
+public class AddressService : IAddressService
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
@@ -52,7 +53,7 @@ public class AddressService
         // Get the user
         var user = _userManager.Users
             .Include(u => u.Addresses)
-            .SingleOrDefault(u => u.Id == userId) ?? 
+            .SingleOrDefault(u => u.Id == userId) ??
             throw new InvalidOperationException($"User with ID {userId} not found");
 
         var validAddressDTO = AddressValidator.ValidateAddress(addressDTO);
@@ -80,7 +81,7 @@ public class AddressService
 
         // Get the user's address
         var addressToUpdate = user.Addresses
-            .SingleOrDefault(a => a.Id == addressId) ?? 
+            .SingleOrDefault(a => a.Id == addressId) ??
             throw new InvalidOperationException($"Address with ID {addressId} not found");
 
         // Validate the new address

@@ -1,10 +1,11 @@
 ﻿using ClinchApi.Entities;
+using ClinchApi.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClinchApi.Services;
 
-public class RoleService
+public class RoleService : IRoleService
 {
     private readonly RoleManager<IdentityRole<int>> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
@@ -27,14 +28,14 @@ public class RoleService
     //Get role by ID
     public async Task<IdentityRole<int>> GetRoleById(string roleId)
     {
-        return await _roleManager.FindByIdAsync(roleId) ?? 
+        return await _roleManager.FindByIdAsync(roleId) ??
             throw new InvalidOperationException($"Role with ID {roleId} not found");
     }
 
     //Get the roles of a user
     public async Task<List<string>> GetUserRolesAsync(string userId)
     {
-        var user = await _userManager.FindByIdAsync(userId) ?? 
+        var user = await _userManager.FindByIdAsync(userId) ??
             throw new InvalidOperationException($"User with ID {userId} not found");
 
         var roles = await _userManager.GetRolesAsync(user);
@@ -48,11 +49,11 @@ public class RoleService
 
         if (roleExists)
         {
-            throw new ArgumentException("Role already exists", roleName);            
+            throw new ArgumentException("Role already exists", roleName);
         }
 
         var role = new IdentityRole<int>(roleName);
-        
+
         await _roleManager.CreateAsync(role);
 
         return role;
@@ -98,7 +99,7 @@ public class RoleService
     //Assign role to a user
     public async Task<bool> AssignRoleToUserAsync(string userId, string roleName)
     {
-        var user = await _userManager.FindByIdAsync(userId) ?? 
+        var user = await _userManager.FindByIdAsync(userId) ??
             throw new InvalidOperationException($"User with ID {userId} not found");
 
         if (!await _roleManager.RoleExistsAsync(roleName))
