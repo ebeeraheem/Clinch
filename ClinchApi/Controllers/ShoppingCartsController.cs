@@ -22,10 +22,23 @@ public class ShoppingCartsController : ControllerBase
     /// <returns>A list of shopping cart items</returns>
     [HttpGet("{userId}/cart")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<ShoppingCartItem>>> GetCart(int userId)
     {
-        var cart = await _cartService.GetCart(userId);
-        return Ok(cart);
+        try
+        {
+            var cart = await _cartService.GetCart(userId);
+            return Ok(cart);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
+        }
     }
 
     /// <summary>
@@ -78,11 +91,11 @@ public class ShoppingCartsController : ControllerBase
             var updatedCart = await _cartService.IncreaseQuantity(userId, productId);
             return Ok(updatedCart);
         }
-        catch (ArgumentException ex)
+        catch (InvalidOperationException ex)
         {
             return NotFound(ex.Message);
         }
-        catch (InvalidOperationException ex)
+        catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
         }
@@ -100,6 +113,7 @@ public class ShoppingCartsController : ControllerBase
     /// <returns>The user's shopping cart</return
     [HttpPost("{userId}/cart/decrease/{productId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ShoppingCart>> DecreaseQuantity(int userId, int productId)
@@ -109,9 +123,13 @@ public class ShoppingCartsController : ControllerBase
             var updatedCart = await _cartService.DecreaseQuantity(userId, productId);
             return Ok(updatedCart);
         }
-        catch (ArgumentException ex)
+        catch (InvalidOperationException ex)
         {
             return NotFound(ex.Message);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
         }
         catch (Exception)
         {
@@ -127,6 +145,7 @@ public class ShoppingCartsController : ControllerBase
     /// <returns>The user's shopping cart</returns>
     [HttpDelete("{userId}/cart/remove/{productId}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ShoppingCart>> RemoveFromCart(int userId, int productId)
@@ -136,9 +155,13 @@ public class ShoppingCartsController : ControllerBase
             await _cartService.RemoveFromCart(userId, productId);
             return NoContent();
         }
-        catch (ArgumentException ex)
+        catch (InvalidOperationException ex)
         {
             return NotFound(ex.Message);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
         }
         catch (Exception)
         {
@@ -153,6 +176,7 @@ public class ShoppingCartsController : ControllerBase
     /// <returns>The user's empty cart</returns>
     [HttpDelete("{userId}/cart/clear")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ShoppingCart>> ClearCart(int userId)
     {
@@ -160,6 +184,10 @@ public class ShoppingCartsController : ControllerBase
         {
             await _cartService.ClearCart(userId);
             return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(ex.Message);
         }
         catch (Exception)
         {

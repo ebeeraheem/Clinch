@@ -14,6 +14,18 @@ public class ShoppingCartService
         _context = context;
     }
 
+    //Get all items in the user's shopping cart
+    public async Task<List<ShoppingCartItem>> GetCart(int userId)
+    {
+        //Get the shopping cart based on the user ID
+        var shoppingCart = await _context.ShoppingCarts
+            .Include(c => c.ShoppingCartItems)
+            .SingleOrDefaultAsync(c => c.UserId == userId) ??
+            throw new InvalidOperationException("Cart not found");
+
+        return shoppingCart.ShoppingCartItems;
+    }
+
     //Add to cart
     public async Task<ShoppingCart> AddToCart(int userId, int productId)
     {
@@ -32,7 +44,7 @@ public class ShoppingCartService
         if (shoppingCart is null)
         {
             //Create a new cart if it doesn't exist
-            shoppingCart = ShoppingCartCreator.CreateShoppingCart(userId);
+            shoppingCart = new(){ UserId = userId };
 
             _context.ShoppingCarts.Add(shoppingCart);
             await _context.SaveChangesAsync();
@@ -42,12 +54,8 @@ public class ShoppingCartService
         //NOTE: any item that is already in the cart should not have the AddToCart endpoint available
         var existingItem = _context.ShoppingCartItems
             .FirstOrDefault(item => item.ProductId == productId &&
-            item.ShoppingCartId == shoppingCart.Id);
-
-        if (existingItem is not null)
-        {
+            item.ShoppingCartId == shoppingCart.Id) ??
             throw new ArgumentException("Product is already in the cart");
-        }
 
         //Create the item to add to the cart
         var itemToAdd = new ShoppingCartItem()
@@ -62,32 +70,9 @@ public class ShoppingCartService
         _context.ShoppingCartItems.Add(itemToAdd);
         await _context.SaveChangesAsync();
 
-        //shoppingCart.ShoppingCartItemIds.Add(itemToAdd.Id);
-        //await _context.SaveChangesAsync();
-
         return shoppingCart;
     }
-
-    //Get all items in the user's shopping cart
-    public async Task<List<ShoppingCartItem>> GetCart(int userId)
-    {
-        //Get the shopping cart based on the user ID
-        var shoppingCart = await _context.ShoppingCarts
-            .Include(c => c.ShoppingCartItems)
-            .SingleOrDefaultAsync(c => c.UserId == userId);
-
-        if (shoppingCart is null)
-        {
-            //Create a new cart if it doesn't exist
-            shoppingCart = ShoppingCartCreator.CreateShoppingCart(userId);
-
-            _context.ShoppingCarts.Add(shoppingCart);
-            await _context.SaveChangesAsync();
-        }
-
-        return shoppingCart.ShoppingCartItems;
-    }
-
+        
     //Increase quantity (Some products might have max purchase limit)
     //NOTE: This endpoint should not be available to products that are not in the cart
     public async Task<ShoppingCart> IncreaseQuantity(int userId, int productId)
@@ -97,18 +82,8 @@ public class ShoppingCartService
         //Get the shopping cart based on the userId
         var shoppingCart = _context.ShoppingCarts
             .Include(c => c.ShoppingCartItems)
-            .SingleOrDefault(c => c.UserId == userId);
-
-        if (shoppingCart is null)
-        {
-            //Create a new cart if it doesn't exist
-            shoppingCart = ShoppingCartCreator.CreateShoppingCart(userId);
-
-            _context.ShoppingCarts.Add(shoppingCart);
-            await _context.SaveChangesAsync();
-
-            return shoppingCart; // return early if cart is null
-        }
+            .SingleOrDefault(c => c.UserId == userId) ??
+            throw new InvalidOperationException("Cart not found");
 
         //Get the item to update from the cart
         var itemToUpdate = shoppingCart.ShoppingCartItems
@@ -128,12 +103,6 @@ public class ShoppingCartService
         //Increase the quantity of the item by one
         itemToUpdate.Quantity++;
 
-        ////Decrease the quantity of the product by one
-        ////NOTE: it's not good to decrease the quantity of a product
-        ////just because somebody added it to their cart
-        ////because they might not buy it at all
-        //product.Quantity--;
-
         await _context.SaveChangesAsync();
         transaction.Commit();
 
@@ -147,18 +116,8 @@ public class ShoppingCartService
         //Get the shopping cart based on the userId
         var shoppingCart = _context.ShoppingCarts
             .Include(c => c.ShoppingCartItems)
-            .SingleOrDefault(c => c.UserId == userId);
-
-        if (shoppingCart is null)
-        {
-            //Create a new cart if it doesn't exist
-            shoppingCart = ShoppingCartCreator.CreateShoppingCart(userId);
-
-            _context.ShoppingCarts.Add(shoppingCart);
-            await _context.SaveChangesAsync();
-
-            return shoppingCart; // return early if cart is null
-        }
+            .SingleOrDefault(c => c.UserId == userId) ??
+            throw new InvalidOperationException("Cart not found");
 
         //Get the item to update from the cart
         var itemToUpdate = shoppingCart.ShoppingCartItems.FirstOrDefault(item => item.ProductId == productId) ?? 
@@ -166,7 +125,6 @@ public class ShoppingCartService
 
         if (itemToUpdate.Quantity == 1)
         {
-            //shoppingCart.ShoppingCartItemIds.Remove(itemToUpdate.Id);
             shoppingCart.ShoppingCartItems.Remove(itemToUpdate);
         }
         else
@@ -186,26 +144,15 @@ public class ShoppingCartService
         //Get the shopping cart based on the userId
         var shoppingCart = _context.ShoppingCarts
             .Include(c => c.ShoppingCartItems)
-            .SingleOrDefault(c => c.UserId == userId);
-
-        if (shoppingCart is null)
-        {
-            //Create a new cart if it doesn't exist
-            shoppingCart = ShoppingCartCreator.CreateShoppingCart(userId);
-
-            _context.ShoppingCarts.Add(shoppingCart);
-            await _context.SaveChangesAsync();
-
-            return shoppingCart; // return early if cart is null
-        }
+            .SingleOrDefault(c => c.UserId == userId) ??
+            throw new InvalidOperationException("Cart not found");
 
         //Get the item to remove from the shopping cart
         var itemToRemove = shoppingCart.ShoppingCartItems
             .FirstOrDefault(item => item.ProductId == productId) ?? 
             throw new ArgumentException("Product does not exist in the cart");
 
-        //Remove the item and its associated ID
-        //shoppingCart.ShoppingCartItemIds.Remove(itemToRemove.Id);
+        //Remove the item
         shoppingCart.ShoppingCartItems.Remove(itemToRemove);
 
         await _context.SaveChangesAsync();
@@ -220,26 +167,15 @@ public class ShoppingCartService
         //Get the shopping cart based on the userId
         var shoppingCart = _context.ShoppingCarts
             .Include(c => c.ShoppingCartItems)
-            .SingleOrDefault(c => c.UserId == userId);
-
-        if (shoppingCart is null)
-        {
-            //Create a new cart if it doesn't exist
-            shoppingCart = ShoppingCartCreator.CreateShoppingCart(userId);
-
-            _context.ShoppingCarts.Add(shoppingCart);
-            await _context.SaveChangesAsync();
-
-            return shoppingCart; // return early if cart is null
-        }
+            .SingleOrDefault(c => c.UserId == userId) ??
+            throw new InvalidOperationException("Cart not found");
 
         //Get all the items in the cart
         var cartItems = shoppingCart.ShoppingCartItems.ToList();
 
-        //Remove all the items and their associated IDs
+        //Remove all the items
         foreach (var item in cartItems)
         {
-            //shoppingCart.ShoppingCartItemIds.Remove(item.Id);
             shoppingCart.ShoppingCartItems.Remove(item);
         }
 
