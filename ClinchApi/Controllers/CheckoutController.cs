@@ -1,5 +1,6 @@
 ﻿using ClinchApi.Models;
 using ClinchApi.Services;
+using ClinchApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +11,9 @@ namespace ClinchApi.Controllers;
 [ApiController]
 public class CheckoutController : ControllerBase
 {
-    private readonly CheckoutService _checkoutService;
+    private readonly ICheckoutService _checkoutService;
 
-    public CheckoutController(CheckoutService checkoutService)
+    public CheckoutController(ICheckoutService checkoutService)
     {
         _checkoutService = checkoutService;
     }

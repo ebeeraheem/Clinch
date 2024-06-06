@@ -1,6 +1,7 @@
 ﻿using ClinchApi.Entities;
 using ClinchApi.Models;
 using ClinchApi.Services;
+using ClinchApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,9 +15,9 @@ namespace ClinchApi.Controllers;
 [Authorize]
 public class AccountsController : ControllerBase
 {
-    private readonly UserService _userService;
+    private readonly IUserService _userService;
 
-    public AccountsController(UserService userService)
+    public AccountsController(IUserService userService)
     {
         _userService = userService;
     }

@@ -4,6 +4,7 @@ using ClinchApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using ClinchApi.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using ClinchApi.Services.Interfaces;
 
 namespace ClinchApi.Controllers;
 
@@ -11,9 +12,9 @@ namespace ClinchApi.Controllers;
 [ApiController]
 public class ProductsController : ControllerBase
 {
-    private readonly ProductService _productService;
+    private readonly IProductService _productService;
 
-    public ProductsController(ProductService productService)
+    public ProductsController(IProductService productService)
     {
         _productService = productService;
     }

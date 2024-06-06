@@ -1,6 +1,7 @@
 ﻿using ClinchApi.Entities;
 using ClinchApi.Models.DTOs;
 using ClinchApi.Services;
+using ClinchApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClinchApi.Controllers;
@@ -9,9 +10,9 @@ namespace ClinchApi.Controllers;
 [ApiController]
 public class AddressController : ControllerBase
 {
-    private readonly AddressService _addressService;
+    private readonly IAddressService _addressService;
 
-    public AddressController(AddressService addressService)
+    public AddressController(IAddressService addressService)
     {
         _addressService = addressService;
     }

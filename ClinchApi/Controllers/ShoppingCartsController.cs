@@ -1,5 +1,6 @@
 ﻿using ClinchApi.Entities;
 using ClinchApi.Services;
+using ClinchApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClinchApi.Controllers;
@@ -8,9 +9,9 @@ namespace ClinchApi.Controllers;
 [ApiController]
 public class ShoppingCartsController : ControllerBase
 {
-    private readonly ShoppingCartService _cartService;
+    private readonly IShoppingCartService _cartService;
 
-    public ShoppingCartsController(ShoppingCartService cartService)
+    public ShoppingCartsController(IShoppingCartService cartService)
     {
         _cartService = cartService;
     }

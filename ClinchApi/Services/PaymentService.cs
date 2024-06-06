@@ -1,9 +1,8 @@
 ﻿using ClinchApi.Models.Results;
-using ClinchApi.Services.Interfaces;
 
 namespace ClinchApi.Services;
 
-public class PaymentService : IPaymentService
+public class PaymentService
 {
     public async Task<PaymentResult> ProcessPaymentAsync(string paymentToken, decimal amount)
     {

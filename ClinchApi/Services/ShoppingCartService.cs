@@ -55,8 +55,12 @@ public class ShoppingCartService : IShoppingCartService
         //NOTE: any item that is already in the cart should not have the AddToCart endpoint available
         var existingItem = _context.ShoppingCartItems
             .FirstOrDefault(item => item.ProductId == productId &&
-            item.ShoppingCartId == shoppingCart.Id) ??
+            item.ShoppingCartId == shoppingCart.Id);
+
+        if (existingItem is not null)
+        {
             throw new ArgumentException("Product is already in the cart");
+        }
 
         //Create the item to add to the cart
         var itemToAdd = new ShoppingCartItem()
