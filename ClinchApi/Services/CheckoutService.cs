@@ -50,6 +50,15 @@ public class CheckoutService
             };
         }
 
+        if (cart.ShoppingCartItems.Count == 0)
+        {
+            return new CheckoutResult
+            {
+                Success = false,
+                Message = "Cart is empty"
+            };
+        }
+
         // Calculate the total amount of the order
         var totalAmount = cart.ShoppingCartItems.Sum(item => item.UnitPrice * item.Quantity);
 
@@ -67,11 +76,24 @@ public class CheckoutService
         }
 
         // Get user's billing and shipping addresses
+        // NOTE: This is based off the assumption that a user has
+        // only one billing address and one shipping address.
         var billingAddress = user.Addresses.SingleOrDefault(
             a => a.AddressType == AddressType.BillingAddress);
 
         var shippingAddress = user.Addresses.SingleOrDefault(
             a => a.AddressType == AddressType.ShippingAddress);
+
+        // Check if either address is missing
+        if (billingAddress is null)
+        {
+            throw new InvalidOperationException("Billing address is required to process the order.");
+        }
+
+        if (shippingAddress is null)
+        {
+            throw new InvalidOperationException("Shipping address is required to process the order.");
+        }
 
         // Process order logic
         var order = new Order()
