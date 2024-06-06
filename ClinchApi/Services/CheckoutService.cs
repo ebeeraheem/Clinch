@@ -1,6 +1,5 @@
 ﻿using ClinchApi.Data;
 using ClinchApi.Entities;
-using ClinchApi.Extensions;
 using ClinchApi.Models;
 using ClinchApi.Models.Results;
 using ClinchApi.Services.Interfaces;

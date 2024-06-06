@@ -1,8 +1,8 @@
 using ClinchApi.Data;
-using ClinchApi.Extensions;
 using ClinchApi.Entities;
-using Microsoft.EntityFrameworkCore;
+using ClinchApi.Extensions;
 using ClinchApi.StartupConfigs;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 

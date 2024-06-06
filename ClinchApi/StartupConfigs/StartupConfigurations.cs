@@ -1,10 +1,9 @@
-﻿using ClinchApi.Services.Interfaces;
-using ClinchApi.Services;
-using System.Runtime.CompilerServices;
-using Swashbuckle.AspNetCore.Filters;
-using ClinchApi.Data;
+﻿using ClinchApi.Data;
 using ClinchApi.Entities;
+using ClinchApi.Services;
+using ClinchApi.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace ClinchApi.StartupConfigs;
 

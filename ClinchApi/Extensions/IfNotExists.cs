@@ -10,7 +10,7 @@ public static class IfNotExists
         var services = scope.ServiceProvider;
         var context = services
             .GetRequiredService<ApplicationDbContext>();
-        
+
         // Ensure database is deleted and created anew
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();

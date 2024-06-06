@@ -1,9 +1,9 @@
 ﻿using ClinchApi.Data;
-using ClinchApi.Extensions;
 using ClinchApi.Entities;
-using Microsoft.EntityFrameworkCore;
+using ClinchApi.Extensions;
 using ClinchApi.Models.DTOs;
 using ClinchApi.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClinchApi.Services;
 
@@ -52,11 +52,8 @@ public class CategoryService : ICategoryService
             throw new ArgumentException("Invalid ID or category");
         }
 
-        var categoryToUpdate = await _context.Categories.FindAsync(id);
-        if (categoryToUpdate is null)
-        {
+        var categoryToUpdate = await _context.Categories.FindAsync(id) ?? 
             throw new InvalidOperationException($"Category with ID {id} not found");
-        }
 
         var validCategory = await CategoryValidator
             .ValidateCategory(newCategory, _context, true, id);
@@ -68,11 +65,8 @@ public class CategoryService : ICategoryService
     //Delete a category
     public async Task Delete(int id)
     {
-        var categoryToDelete = await _context.Categories.FindAsync(id);
-        if (categoryToDelete is null)
-        {
+        var categoryToDelete = await _context.Categories.FindAsync(id) ?? 
             throw new InvalidOperationException($"Category with ID {id} not found");
-        }
 
         _context.Categories.Remove(categoryToDelete);
         await _context.SaveChangesAsync();

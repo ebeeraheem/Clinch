@@ -1,10 +1,9 @@
-﻿using ClinchApi.Extensions;
-using ClinchApi.Entities;
-using ClinchApi.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using ClinchApi.Entities;
+using ClinchApi.Extensions;
 using ClinchApi.Models.DTOs;
-using Microsoft.AspNetCore.Authorization;
 using ClinchApi.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ClinchApi.Controllers;
 

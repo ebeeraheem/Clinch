@@ -1,5 +1,4 @@
 ﻿using ClinchApi.Entities.Interfaces;
-using System.Text;
 
 namespace ClinchApi.Entities;
 

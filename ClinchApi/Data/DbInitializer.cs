@@ -32,7 +32,7 @@ public static class DbInitializer
             context.SaveChanges();
         }
 
-            // Add products if no product is found in the db
+        // Add products if no product is found in the db
         if (!context.Products.Any())
         {
             var products = new Product[]
@@ -214,7 +214,7 @@ public static class DbInitializer
             .GetRequiredService<RoleManager<IdentityRole<int>>>();
 
         // Seed roles
-        string[] roleNames = { "Admin", "Store Owner", "Store Manager", "Customer" };
+        string[] roleNames = ["Admin", "Store Owner", "Store Manager", "Customer"];
         foreach (var roleName in roleNames)
         {
             if (!await roleManager.RoleExistsAsync(roleName))
@@ -246,6 +246,6 @@ public static class DbInitializer
                 await userManager.AddToRoleAsync(user, "Admin");
             }
             await context.SaveChangesAsync();
-        }        
+        }
     }
 }

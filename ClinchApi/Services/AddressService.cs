@@ -1,11 +1,10 @@
 ﻿using ClinchApi.Data;
-using ClinchApi.Extensions;
 using ClinchApi.Entities;
-using Microsoft.EntityFrameworkCore;
+using ClinchApi.Extensions;
 using ClinchApi.Models.DTOs;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using ClinchApi.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClinchApi.Services;
 

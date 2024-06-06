@@ -1,8 +1,6 @@
 ﻿using ClinchApi.Models;
-using ClinchApi.Services;
 using ClinchApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClinchApi.Controllers;
@@ -124,7 +122,7 @@ public class RolesController : ControllerBase
             var role = await _roleService.CreateRoleAsync(roleName);
 
             return role is not null ?
-                CreatedAtAction(nameof(GetRoleById), new { roleId = role.Id.ToString() }, role) : 
+                CreatedAtAction(nameof(GetRoleById), new { roleId = role.Id.ToString() }, role) :
                 BadRequest("Role creation failed");
         }
         catch (ArgumentException ex)
@@ -199,7 +197,7 @@ public class RolesController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
         }
     }
-        
+
     /// <summary>
     /// Assigns a role to a user
     /// </summary>

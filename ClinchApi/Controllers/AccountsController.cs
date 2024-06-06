@@ -1,10 +1,6 @@
-﻿using ClinchApi.Entities;
-using ClinchApi.Models;
-using ClinchApi.Services;
+﻿using ClinchApi.Models;
 using ClinchApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 

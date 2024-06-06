@@ -1,6 +1,5 @@
 ﻿using ClinchApi.Entities;
 using ClinchApi.Models.DTOs;
-using ClinchApi.Services;
 using ClinchApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
