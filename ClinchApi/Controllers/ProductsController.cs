@@ -80,7 +80,7 @@ public class ProductsController : ControllerBase
     /// <param name="newProductDTO">Details of the new product</param>
     /// <returns>A 'Location' response header with the URL of the newly created product</returns>
     [HttpPost]
-    [Authorize(Roles = "Admin,Store Owner")]
+    [Authorize(Roles = "Admin,Store Owner,Store Manager")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
