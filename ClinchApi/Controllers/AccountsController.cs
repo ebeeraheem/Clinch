@@ -3,7 +3,6 @@ using ClinchApi.Models;
 using ClinchApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace ClinchApi.Controllers;
 
@@ -37,20 +36,13 @@ public class AccountsController : ControllerBase
     /// </summary>
     /// <param name="userId">ID of the user to return</param>
     /// <returns>A user</returns>
+    [AuthorizeUserOrAdmin]
     [HttpGet("{userId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetUserById(string userId)
     {
-        var currentUserId = User.GetUserId();
-        var isAdmin = User.IsInRole("Admin");
-
-        if (currentUserId != userId && !isAdmin)
-        {
-            return Forbid();
-        }
-
         try
         {
             var userModel = await _userService.GetUserByIdAsync(userId);
@@ -71,6 +63,7 @@ public class AccountsController : ControllerBase
     /// </summary>
     /// <param name="model">A model that contsind the updated user details</param>
     /// <returns>No content</returns>
+    [AuthorizeUserOrAdmin]
     [HttpPost("{userId}/update")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -81,14 +74,6 @@ public class AccountsController : ControllerBase
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
-        }
-
-        var currentUserId = User.GetUserId();
-        var isAdmin = User.IsInRole("Admin");
-
-        if (currentUserId != userId && !isAdmin)
-        {
-            return Forbid();
         }
 
         var result = await _userService.UpdateUserAsync(userId, model);
@@ -121,19 +106,12 @@ public class AccountsController : ControllerBase
     /// </summary>
     /// <param name="id">ID of the user whose account is to be deleted</param>
     /// <returns>No content</returns>
+    [AuthorizeUserOrAdmin]
     [HttpDelete("{userId}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeleteUser(string userId)
     {
-        var currentUserId = User.GetUserId();
-        var isAdmin = User.IsInRole("Admin");
-
-        if (currentUserId != userId && !isAdmin)
-        {
-            return Forbid();
-        }
-
         var result = await _userService.DeleteUserAsync(userId);
         if (result.Succeeded)
         {
