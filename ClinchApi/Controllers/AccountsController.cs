@@ -1,4 +1,5 @@
-﻿using ClinchApi.Models;
+﻿using ClinchApi.Extensions;
+using ClinchApi.Models;
 using ClinchApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +43,14 @@ public class AccountsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetUserById(string userId)
     {
+        var currentUserId = User.GetUserId();
+        var isAdmin = User.IsInRole("Admin");
+
+        if (currentUserId != userId && !isAdmin)
+        {
+            return Forbid();
+        }
+
         try
         {
             var userModel = await _userService.GetUserByIdAsync(userId);
@@ -62,22 +71,24 @@ public class AccountsController : ControllerBase
     /// </summary>
     /// <param name="model">A model that contsind the updated user details</param>
     /// <returns>No content</returns>
-    [HttpPost("update")]
+    [HttpPost("{userId}/update")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserModel model)
+    public async Task<IActionResult> UpdateUserProfile(string userId, [FromBody] UpdateUserModel model)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userId is null)
+        var currentUserId = User.GetUserId();
+        var isAdmin = User.IsInRole("Admin");
+
+        if (currentUserId != userId && !isAdmin)
         {
-            return Unauthorized();
+            return Forbid();
         }
 
         var result = await _userService.UpdateUserAsync(userId, model);
@@ -88,7 +99,7 @@ public class AccountsController : ControllerBase
 
         foreach (var error in result.Errors)
         {
-            ModelState.AddModelError(string.Empty, error.Description);
+            ModelState.AddModelError("Error", error.Description);
         }
         return BadRequest(ModelState);
     }
@@ -110,12 +121,20 @@ public class AccountsController : ControllerBase
     /// </summary>
     /// <param name="id">ID of the user whose account is to be deleted</param>
     /// <returns>No content</returns>
-    [HttpDelete("{id}")]
+    [HttpDelete("{userId}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> DeleteUser(string id)
+    public async Task<IActionResult> DeleteUser(string userId)
     {
-        var result = await _userService.DeleteUserAsync(id);
+        var currentUserId = User.GetUserId();
+        var isAdmin = User.IsInRole("Admin");
+
+        if (currentUserId != userId && !isAdmin)
+        {
+            return Forbid();
+        }
+
+        var result = await _userService.DeleteUserAsync(userId);
         if (result.Succeeded)
         {
             return NoContent();
