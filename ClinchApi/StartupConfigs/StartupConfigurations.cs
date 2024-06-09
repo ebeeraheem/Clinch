@@ -2,6 +2,7 @@
 using ClinchApi.Entities;
 using ClinchApi.Services;
 using ClinchApi.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -49,5 +50,11 @@ public static class StartupConfigurations
         .AddEntityFrameworkStores<ApplicationDbContext>();
 
         builder.Services.AddEndpointsApiExplorer();
+
+        //// Require users of the app to be authenticated
+        //builder.Services.AddAuthorizationBuilder()
+        //    .SetFallbackPolicy(new AuthorizationPolicyBuilder()
+        //        .RequireAuthenticatedUser()
+        //        .Build());
     }
 }
