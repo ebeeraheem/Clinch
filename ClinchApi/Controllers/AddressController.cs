@@ -1,4 +1,5 @@
 ﻿using ClinchApi.Entities;
+using ClinchApi.Extensions;
 using ClinchApi.Models.DTOs;
 using ClinchApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ namespace ClinchApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[AuthorizeUserOrAdmin]
 public class AddressController : ControllerBase
 {
     private readonly IAddressService _addressService;
