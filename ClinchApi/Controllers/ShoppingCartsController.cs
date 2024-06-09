@@ -1,9 +1,11 @@
 ﻿using ClinchApi.Entities;
+using ClinchApi.Extensions;
 using ClinchApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClinchApi.Controllers;
 
+[AuthorizeUserOrAdmin]
 [Route("api/[controller]")]
 [ApiController]
 public class ShoppingCartsController : ControllerBase
