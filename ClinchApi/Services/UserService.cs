@@ -73,6 +73,17 @@ public class UserService : IUserService
         user.Gender = model.Gender;
         user.DateOfBirth = model.DateOfBirth;
 
+        // Add 'customer' role to users without any role
+        var userRoles = await _userManager.GetRolesAsync(user);
+        if (!userRoles.Any())
+        {
+            var roleResult = await _userManager.AddToRoleAsync(user, "Customer");
+            if (!roleResult.Succeeded)
+            {
+                return roleResult;
+            }
+        }
+
         return await _userManager.UpdateAsync(user);
     }
 
