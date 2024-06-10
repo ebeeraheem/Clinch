@@ -12,9 +12,9 @@ public class CheckoutService : ICheckoutService
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly PaymentService _paymentService;
+    private readonly IPaymentService _paymentService;
 
-    public CheckoutService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, PaymentService paymentService)
+    public CheckoutService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IPaymentService paymentService)
     {
         _context = context;
         _userManager = userManager;
