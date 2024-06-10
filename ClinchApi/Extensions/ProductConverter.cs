@@ -23,16 +23,14 @@ public static class ProductConverter
         };
 
         // Fetch categories from the database based on CategoryIds
-        if (productDTO.CategoryId is not null && productDTO.CategoryId.Any())
+        if (productDTO.CategoryId is not null && productDTO.CategoryId.Count != 0)
         {
-            product.Categories = new List<Category>();
+            product.Categories = [];
             foreach (var id in productDTO.CategoryId)
             {
-                var category = await context.Categories.FindAsync(id);
-                if (category is null)
-                {
+                var category = await context.Categories.FindAsync(id) ?? 
                     throw new ArgumentException($"Category with id {id} does not exist");
-                }
+
                 // Add the category to the product's Categories collection
                 product.Categories.Add(category);
             }
@@ -59,6 +57,7 @@ public static class ProductConverter
 
         var categoriesToRemove = productToUpdate.Categories
             .Select(c => c.Id).Except(product.CategoryId!).ToList();
+
         var categoriesToAdd = product.CategoryId!.Except(productToUpdate.Categories.Select(c => c.Id)).ToList();
 
         //Remove categories
@@ -74,11 +73,10 @@ public static class ProductConverter
         //Add new categories
         foreach (var categoryIdToAdd in categoriesToAdd)
         {
-            var categoryToAdd = context.Categories.Find(categoryIdToAdd);
-            if (categoryToAdd is not null)
-            {
-                productToUpdate.Categories.Add(categoryToAdd);
-            }
+            var categoryToAdd = context.Categories.Find(categoryIdToAdd) ??
+                throw new ArgumentException($"Category with id {categoryIdToAdd} does not exist");
+
+            productToUpdate.Categories.Add(categoryToAdd);
         }
         await context.SaveChangesAsync();
 
