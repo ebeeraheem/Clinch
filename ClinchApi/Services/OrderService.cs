@@ -1,10 +1,11 @@
 ﻿using ClinchApi.Data;
 using ClinchApi.Entities;
+using ClinchApi.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClinchApi.Services;
 
-public class OrderService
+public class OrderService : IOrderService
 {
     private readonly ApplicationDbContext _context;
 
@@ -44,7 +45,7 @@ public class OrderService
     {
         return await _context.Orders
             .Include(o => o.OrderItems)
-            .Where(o => o.OrderItems != null && 
+            .Where(o => o.OrderItems != null &&
                 o.OrderItems.Any(oi => oi.ProductId == productId))
             .ToListAsync() ??
             throw new InvalidOperationException($"Order with productId {productId} not found");

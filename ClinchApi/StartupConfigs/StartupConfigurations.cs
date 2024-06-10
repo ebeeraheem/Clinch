@@ -2,7 +2,6 @@
 using ClinchApi.Entities;
 using ClinchApi.Services;
 using ClinchApi.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -15,9 +14,10 @@ public static class StartupConfigurations
         builder.Services.AddScoped<IAddressService, AddressService>();
         builder.Services.AddScoped<ICategoryService, CategoryService>();
         builder.Services.AddScoped<IProductService, ProductService>();
+        builder.Services.AddScoped<IOrderService, OrderService>();
         builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
         builder.Services.AddScoped<ICheckoutService, CheckoutService>();
-        builder.Services.AddScoped<PaymentService>();
+        builder.Services.AddScoped<IPaymentService, FakePaymentService>();
         builder.Services.AddScoped<IRoleService, RoleService>();
         builder.Services.AddScoped<IUserService, UserService>();
     }
