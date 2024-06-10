@@ -11,8 +11,8 @@ public static class IfNotExists
         var context = services
             .GetRequiredService<ApplicationDbContext>();
 
-        // Ensure database is deleted and created anew
-        context.Database.EnsureDeleted();
+        //// Ensure database is deleted and created anew
+        //context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
 
         // Seed the database with initial data, including roles and admin user
