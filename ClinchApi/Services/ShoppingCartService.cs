@@ -17,6 +17,10 @@ public class ShoppingCartService : IShoppingCartService
     //Get all items in the user's shopping cart
     public async Task<List<ShoppingCartItem>> GetCart(int userId)
     {
+        // Validate the userId
+        _ = await _context.ApplicationUsers.FindAsync(userId) ??
+            throw new InvalidOperationException($"User with id {userId} not found");
+
         //Get the shopping cart based on the user ID
         var shoppingCart = await _context.ShoppingCarts
             .Include(c => c.ShoppingCartItems)
@@ -29,6 +33,10 @@ public class ShoppingCartService : IShoppingCartService
     //Add to cart
     public async Task<ShoppingCart> AddToCart(int userId, int productId)
     {
+        // Validate the userId
+        _ = await _context.ApplicationUsers.FindAsync(userId) ??
+            throw new InvalidOperationException($"User with id {userId} not found");
+
         //Get the product to add to the cart
         var productToAdd = await _context.Products.AsNoTracking()
             .SingleOrDefaultAsync(p => p.Id == productId) ??
@@ -81,6 +89,9 @@ public class ShoppingCartService : IShoppingCartService
     //NOTE: This endpoint should not be available to products that are not in the cart
     public async Task<ShoppingCart> IncreaseQuantity(int userId, int productId)
     {
+        // Validate the userId
+        _ = await _context.ApplicationUsers.FindAsync(userId) ?? throw new InvalidOperationException($"User with id {userId} not found");
+
         using var transaction = _context.Database.BeginTransaction();
 
         //Get the shopping cart based on the userId
@@ -117,6 +128,9 @@ public class ShoppingCartService : IShoppingCartService
     //NOTE: This endpoint should not be available to products that are not in the cart
     public async Task<ShoppingCart> DecreaseQuantity(int userId, int productId)
     {
+        // Validate the userId
+        _ = await _context.ApplicationUsers.FindAsync(userId) ?? throw new InvalidOperationException($"User with id {userId} not found");
+
         //Get the shopping cart based on the userId
         var shoppingCart = _context.ShoppingCarts
             .Include(c => c.ShoppingCartItems)
@@ -145,6 +159,9 @@ public class ShoppingCartService : IShoppingCartService
     //NOTE: This endpoint should not be available to products that are not in the cart
     public async Task<ShoppingCart> RemoveFromCart(int userId, int productId)
     {
+        // Validate the userId
+        _ = await _context.ApplicationUsers.FindAsync(userId) ?? throw new InvalidOperationException($"User with id {userId} not found");
+
         //Get the shopping cart based on the userId
         var shoppingCart = _context.ShoppingCarts
             .Include(c => c.ShoppingCartItems)
@@ -168,6 +185,9 @@ public class ShoppingCartService : IShoppingCartService
     //NOTE: This endpoint should NOT be available in an empty cart
     public async Task<ShoppingCart> ClearCart(int userId)
     {
+        // Validate the userId
+        _ = await _context.ApplicationUsers.FindAsync(userId) ?? throw new InvalidOperationException($"User with id {userId} not found");
+
         //Get the shopping cart based on the userId
         var shoppingCart = _context.ShoppingCarts
             .Include(c => c.ShoppingCartItems)
