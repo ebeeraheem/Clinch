@@ -55,7 +55,7 @@ public class OrderService : IOrderService
     public async Task UpdateOrderStatus(int orderId, OrderStatus newStatus)
     {
         var order = await _context.Orders.FindAsync(orderId) ??
-            throw new KeyNotFoundException($"Order with ID {orderId} not found.");
+            throw new InvalidOperationException($"Order with ID {orderId} not found.");
 
         order.OrderStatus = newStatus;
 
