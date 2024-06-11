@@ -20,6 +20,7 @@ public class OrdersController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<List<Order>>> GetOrders([FromQuery] OrderStatus? orderStatus)
     {
         var orders = await _orderService.GetAllOrders();
@@ -33,12 +34,16 @@ public class OrdersController : ControllerBase
     }
 
     [HttpGet("users/{userId}/orders")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public ActionResult<List<Order>> GetUserOrders(string userId)
     {
         return _orderService.GetUserOrders(userId);
     }
 
     [HttpGet("{orderId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<Order>> GetOrderById(int orderId)
     {
         try
@@ -56,6 +61,9 @@ public class OrdersController : ControllerBase
     }
 
     [HttpGet("products/{productId}/orders")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<Order>>> GetOrderByProductId(int productId)
     {
         try
@@ -73,6 +81,9 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPatch("{orderId}/status")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> UpdateOrderStatus(int orderId, OrderStatus newStatus)
     {
         try
