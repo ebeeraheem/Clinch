@@ -32,13 +32,13 @@ public class OrdersController : ControllerBase
         return orders.Count == 0 ? NotFound() : Ok(orders);
     }
 
-    [HttpGet("by_userid{userId}")]
+    [HttpGet("users/{userId}/orders")]
     public ActionResult<List<Order>> GetUserOrders(string userId)
     {
         return _orderService.GetUserOrders(userId);
     }
 
-    [HttpGet("by_orderid/{orderId}")]
+    [HttpGet("{orderId}")]
     public async Task<ActionResult<Order>> GetOrderById(int orderId)
     {
         try
@@ -55,7 +55,7 @@ public class OrdersController : ControllerBase
         }
     }
 
-    [HttpGet("by_productid/{productId}")]
+    [HttpGet("products/{productId}/orders")]
     public async Task<ActionResult<List<Order>>> GetOrderByProductId(int productId)
     {
         try
