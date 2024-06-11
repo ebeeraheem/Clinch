@@ -5,6 +5,6 @@ namespace ClinchApi.Services.Interfaces
 {
     public interface ICheckoutService
     {
-        Task<CheckoutResult> ProcessCheckoutAsync(CheckoutModel checkoutModel);
+        Task<CheckoutResult> ProcessCheckoutAsync(CheckoutModel checkoutModel, string currentUserId);
     }
 }

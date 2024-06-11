@@ -2,6 +2,7 @@
 using ClinchApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ClinchApi.Controllers;
 
@@ -28,13 +29,28 @@ public class CheckoutController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var result = await _checkoutService.ProcessCheckoutAsync(checkoutModel);
-
-        if (!result.Success)
+        try
         {
-            return BadRequest(result.Message);
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var result = await _checkoutService.ProcessCheckoutAsync(checkoutModel, currentUserId!);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
         }
 
-        return Ok(result);
+
     }
 }

@@ -21,25 +21,27 @@ public class CheckoutService : ICheckoutService
         _paymentService = paymentService;
     }
 
-    public async Task<CheckoutResult> ProcessCheckoutAsync(CheckoutModel checkoutModel)
+    public async Task<CheckoutResult> ProcessCheckoutAsync(
+        CheckoutModel checkoutModel,
+        string currentUserId)
     {
         // Get the user
         var user = await _userManager.Users
             .Include(u => u.Addresses)
-            .FirstOrDefaultAsync(u => u.Id.ToString() == checkoutModel.UserId);
+            .FirstOrDefaultAsync(u => u.Id.ToString() == currentUserId);
 
         if (user is null)
         {
             return new CheckoutResult
             {
                 Success = false,
-                Message = $"User with ID {checkoutModel.UserId} not found."
+                Message = $"User with ID {currentUserId} not found."
             };
         }
         // Get the user's cart
         var cart = await _context.ShoppingCarts
             .Include(c => c.ShoppingCartItems)
-            .SingleOrDefaultAsync(c => c.UserId.ToString() == checkoutModel.UserId);
+            .SingleOrDefaultAsync(c => c.UserId.ToString() == currentUserId);
 
         if (cart is null)
         {
