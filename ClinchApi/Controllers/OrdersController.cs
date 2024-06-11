@@ -18,6 +18,11 @@ public class OrdersController : ControllerBase
         _orderService = orderService;
     }
 
+    /// <summary>
+    /// Gets a list of all orders with optional parameters
+    /// </summary>
+    /// <param name="orderStatus">Optional status of the order to return</param>
+    /// <returns>A list of orders</returns>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -33,6 +38,11 @@ public class OrdersController : ControllerBase
         return orders.Count == 0 ? NotFound() : Ok(orders);
     }
 
+    /// <summary>
+    /// Get a users orders
+    /// </summary>
+    /// <param name="userId">The id of the user</param>
+    /// <returns>A list of orders</returns>
     [HttpGet("users/{userId}/orders")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public ActionResult<List<Order>> GetUserOrders(string userId)
@@ -40,6 +50,11 @@ public class OrdersController : ControllerBase
         return _orderService.GetUserOrders(userId);
     }
 
+    /// <summary>
+    /// Get an order
+    /// </summary>
+    /// <param name="orderId">Id of the order to return</param>
+    /// <returns>An order</returns>
     [HttpGet("{orderId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -60,6 +75,11 @@ public class OrdersController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Get orders that have a particular product
+    /// </summary>
+    /// <param name="productId">Id of the product</param>
+    /// <returns>A list of products</returns>
     [HttpGet("products/{productId}/orders")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -80,6 +100,12 @@ public class OrdersController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Update the status of an order
+    /// </summary>
+    /// <param name="orderId">The id of the order to update</param>
+    /// <param name="newStatus">The new status of the order</param>
+    /// <returns>No content</returns>
     [HttpPatch("{orderId}/status")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
