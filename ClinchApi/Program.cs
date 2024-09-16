@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // For production or non-testing environment
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Default"))
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ClinchMonsterDb"))
     .LogTo(Console.WriteLine, LogLevel.Information));
 
 builder.Services.AddControllers();
