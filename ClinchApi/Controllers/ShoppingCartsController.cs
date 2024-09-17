@@ -112,7 +112,7 @@ public class ShoppingCartsController : ControllerBase
     /// </summary>
     /// <param name="userId">ID of the user whose item is to be decreased</param>
     /// <param name="productId">ID of the product whose quantity is to be decreased</param>
-    /// <returns>The user's shopping cart</return
+    /// <returns>The user's shopping cart</returns>
     [HttpPost("{userId}/cart/decrease/{productId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -7,6 +7,7 @@ using System.Security.Claims;
 namespace ClinchApi.Controllers;
 
 [Route("api/[controller]")]
+[Authorize]
 [ApiController]
 public class CheckoutController : ControllerBase
 {
@@ -17,8 +18,12 @@ public class CheckoutController : ControllerBase
         _checkoutService = checkoutService;
     }
 
+    /// <summary>
+    /// Make payment for the items in the cart
+    /// </summary>
+    /// <param name="checkoutModel">The payment token and an optional note</param>
+    /// <returns>A flag indicating the result of the checkout process</returns>
     [HttpPost]
-    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -50,7 +55,5 @@ public class CheckoutController : ControllerBase
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
         }
-
-
     }
 }
