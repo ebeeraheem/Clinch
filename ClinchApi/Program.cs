@@ -7,11 +7,20 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-// For production or non-testing environment
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ClinchMonsterDb"))
-    .LogTo(Console.WriteLine, LogLevel.Information));
+if (builder.Environment.IsProduction())
+{
+    // For production
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("ClinchMonsterDb"))
+        .LogTo(Console.WriteLine, LogLevel.Information));
+}
+else
+{
+    // For development or testing
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("Default"))
+        .LogTo(Console.WriteLine, LogLevel.Information));
+}
 
 builder.Services.AddControllers();
 builder.AddCustomServices();
