@@ -1,9 +1,13 @@
-﻿using ClinchApi.Data;
+﻿// Ignore Spelling: Auth
+
+using ClinchApi.Data;
 using ClinchApi.Entities;
 using ClinchApi.Services;
 using ClinchApi.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using System.Reflection;
 
 namespace ClinchApi.StartupConfigs;
 
@@ -26,16 +30,35 @@ public static class StartupConfigurations
     {
         builder.Services.AddSwaggerGen(options =>
         {
-            options.AddSecurityDefinition("oauth2", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
             {
-                In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                In = ParameterLocation.Header,
                 Name = "Authorization",
-                Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+                Type = SecuritySchemeType.Http,
                 Scheme = "Bearer",
                 BearerFormat = "JWT",
                 Description = "Enter 'Bearer' followed by a space and the JWT token."
             });
             options.OperationFilter<SecurityRequirementsOperationFilter>();
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+            {
+               {
+                   new OpenApiSecurityScheme
+                   {
+                       Reference = new OpenApiReference
+                       {
+                           Type = ReferenceType.SecurityScheme,
+                           Id = "Bearer",
+                       }
+                   },
+                   Array.Empty<string>()
+               }
+            });
+
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            options.IncludeXmlComments(xmlPath);
         });
     }
 
